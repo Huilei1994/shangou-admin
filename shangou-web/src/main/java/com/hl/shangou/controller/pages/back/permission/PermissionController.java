@@ -55,6 +55,7 @@ public class PermissionController {
     @ResponseBody
     ResponseDTO ajaxEdit(Permission Permission) {
         ResponseDTO responseDTO = permissionService.ajaxEdit(Permission);
+
         return responseDTO;
     }
 
