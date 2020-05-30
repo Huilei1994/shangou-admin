@@ -1,0 +1,31 @@
+server:
+  port: 80
+
+spring:
+  datasource:
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.5.196:3306/demo_db?serverTimezone=Asia/Shanghai
+    type: com.alibaba.druid.pool.DruidDataSource
+  messages:
+    basename: i18n/validate
+  profiles:
+    active: dev
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+  mapper-locations: classpath*:mybatis/mapper/**/*.xml
+---
+logging:
+  level:
+    com.hl.shangou.dao: info
+spring:
+  profiles: pro
+---
+logging:
+  level:
+    com.hl.shangou.dao: trace
+  profiles: dev
+
