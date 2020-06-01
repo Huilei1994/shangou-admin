@@ -9,4 +9,9 @@ import lombok.Data;
  */
 @Data
 public class UserVO extends User {
+
+    //验证码
+    private String code;
+
+
 }

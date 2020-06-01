@@ -6,7 +6,8 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.5.196:3306/demo_db?serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://120.25.223.121:3306/shangou_db?serverTimezone=Asia/Shanghai
+#    url: jdbc:mysql://192.168.5.196:3306/demo_db?serverTimezone=Asia/Shanghai
     type: com.alibaba.druid.pool.DruidDataSource
   messages:
     basename: i18n/validate

@@ -90,4 +90,10 @@ public class UserServiceImpl implements UserService {
     public UserVO selectDbUserByPhone(UserQuery query) {
         return userDao.selectUserByPhone(query.getPhone());
     }
+
+    @Override
+    public boolean checkPhoneExist(String phone) {
+        UserVO userVO = userDao.selectUserByPhone(phone);
+        return userVO!=null;
+    }
 }

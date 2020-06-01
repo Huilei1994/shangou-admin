@@ -57,6 +57,7 @@ public class PermissionController {
         ResponseDTO responseDTO = permissionService.ajaxEdit(Permission);
 
         return responseDTO;
+
     }
 
 

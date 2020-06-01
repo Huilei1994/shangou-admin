@@ -43,34 +43,36 @@ public class UserRealm extends AuthorizingRealm {
         Object principal = authenticationToken.getPrincipal();// 获取身份（用户名）
         Object credentials = authenticationToken.getCredentials();// 获取密码（密码）：是前端传递来的，不具备真实性
 
+        //获取shiro中的session
+        Session session = SecurityUtils.getSubject().getSession();
+        Object code = session.getAttribute("code");
 
         String password = new String((char[]) credentials);// 前端传递过来的// String.valueOf((char[]) credentials)
-
         UserQuery query = new UserQuery();
         query.setPhone((String) principal);
 
         UserVO dbUser = userService.selectDbUserByPhone(query);// 拿到了数据库的用户
+
         if (dbUser == null) {
             throw new UnknownAccountException("账户或密码错误");
         } else {
-            // 账户虽然存在，就要开始比较密码
-            if (!PasswordUtil.encodePassword(password).equals(dbUser.getPassword())) {
-                // 缓存数据库里边存当前用户密码错误的次数
-                throw new CredentialsException("账户或密码错误");
+            if (code == null) {
+
+                // 账户虽然存在，就要开始比较密码
+                if (!PasswordUtil.encodePassword(password).equals(dbUser.getPassword())) {
+                    // 缓存数据库里边存当前用户密码错误的次数
+                    throw new CredentialsException("账户或密码错误");
+                }
+            }else {
+                //验证码错误就直接抛出异常
+                if (!code.equals(password)) {
+                    throw new CredentialsException("验证码错误");
+                }
             }
         }
         //第二种方式
 
 
-//        query.setPassword(PasswordUtil.encodePassword(password));
-//        UserVO u = userService.login(query);
-//        if (u == null) {
-//            // 如果用户是验证码登录的方式，就应该去直接给他注册一个账号，而后登录
-//            throw new AuthenticationException("账户名或密码错误");
-//        }
-        // 应该设置 session
-
-        Session session = SecurityUtils.getSubject().getSession();
         session.setAttribute("userId", dbUser.getUserId());
         session.setAttribute("nickName", dbUser.getNickName());
         session.setAttribute("phone", dbUser.getPhone());
@@ -80,7 +82,6 @@ public class UserRealm extends AuthorizingRealm {
 
         // 设置权限
         return new SimpleAuthenticationInfo(authenticationToken.getPrincipal(), authenticationToken.getCredentials(), "userRealm");
-
 
     }
 

@@ -10,10 +10,12 @@ import com.hl.shangou.pojo.vo.PermissionVO;
 import com.hl.shangou.pojo.vo.RoleVO;
 import com.hl.shangou.service.RoleService;
 
+import com.hl.shangou.util.Common.StringUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.TreeSet;
 
 
 @Service
@@ -96,6 +98,69 @@ public class RoleServiceImpl implements RoleService {
 
         return ResponseDTO.ok("查询成功",permissionsBuffer);
     }
+
+
+
+
+
+
+    @Override
+    public ResponseDTO ajaxAddPermissions(List<RoleVO> roleVOS,List<PermissionVO> permissionVOS) {
+
+        StringBuffer permissionIdsStr = new StringBuffer();
+
+        TreeSet<Integer> integers = new TreeSet<>();
+        for (PermissionVO permissionVO : permissionVOS) {
+            Integer permissionId = permissionVO.getPermissionId();
+            permissionIdsStr.append(',');
+            permissionIdsStr.append(permissionId);
+        }
+
+        for (RoleVO roleVO : roleVOS) {
+
+            String permissions = roleVO.getPermissions();
+
+            permissions =permissions+ permissionIdsStr.toString();
+
+            //去除前后‘,’逗号
+            if (permissions.startsWith(",")){
+                permissions=permissions.substring(1);
+            }
+            if (permissions.endsWith(",") ) {
+                permissions=permissions.substring(0,permissions.length()-1);
+            }
+
+            String[] split = permissions.split(",");
+
+            //排序去重
+            List<String> sortAndRepeatStr = StringUtil.SortAndRepeatStr(split);
+
+            //清空并重新赋值
+            permissionIdsStr = new StringBuffer();
+            for (String s : sortAndRepeatStr) {
+                permissionIdsStr.append(",");
+                permissionIdsStr.append(s);
+            }
+
+
+            //去掉前后的逗号
+            permissions=permissionIdsStr.toString();
+            if (permissions.startsWith(",")) {
+                permissions=permissions.substring(1);
+            }
+
+            if (permissions.endsWith(",") ) {
+                permissions=permissions.substring(0,permissions.length()-1);
+            }
+
+            roleVO.setPermissions(permissions);
+
+            roleDao.updateByPrimaryKeySelective(roleVO);
+        }
+        return ResponseDTO.ok("成功");
+    }
+
+
 
 
 }
