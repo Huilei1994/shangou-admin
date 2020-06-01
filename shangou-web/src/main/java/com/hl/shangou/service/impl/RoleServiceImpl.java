@@ -97,5 +97,27 @@ public class RoleServiceImpl implements RoleService {
         return ResponseDTO.ok("查询成功",permissionsBuffer);
     }
 
+    @Override
+    public ResponseDTO ajaxAddPermissions(List<RoleVO> roleVOS,List<PermissionVO> permissionVOS) {
+
+        StringBuffer permissionIdsStr = new StringBuffer();
+
+
+        for (PermissionVO permissionVO : permissionVOS) {
+            Integer permissionId = permissionVO.getPermissionId();
+            permissionIdsStr.append(',');
+            permissionIdsStr.append(permissionId);
+        }
+
+        for (RoleVO roleVO : roleVOS) {
+            String permissions = roleVO.getPermissions();
+            permissions =permissions+ permissionIdsStr.toString();
+            roleVO.setPermissions(permissions);
+
+            roleDao.updateByPrimaryKeySelective(roleVO);
+        }
+        return ResponseDTO.ok("成功");
+    }
+
 
 }
