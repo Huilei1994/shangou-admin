@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.shangou.dao.MerchantDao">
+  <resultMap id="BaseResultMap" type="com.hl.shangou.pojo.entity.Merchant">
+    <id column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="phone" jdbcType="CHAR" property="phone" />
+    <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
+    <result column="shop_logo" jdbcType="VARCHAR" property="shopLogo" />
+    <result column="shop_detail" jdbcType="VARCHAR" property="shopDetail" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="contact_name" jdbcType="CHAR" property="contactName" />
+    <result column="pcd" jdbcType="VARCHAR" property="pcd" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="lng" jdbcType="DOUBLE" property="lng" />
+    <result column="lat" jdbcType="DOUBLE" property="lat" />
+    <result column="is_open" jdbcType="BOOLEAN" property="isOpen" />
+    <result column="approval_status" jdbcType="VARCHAR" property="approvalStatus" />
+    <result column="street" jdbcType="VARCHAR" property="street" />
+    <result column="delivery_fee" jdbcType="DECIMAL" property="deliveryFee" />
+    <result column="title1" jdbcType="VARCHAR" property="title1" />
+    <result column="title2" jdbcType="VARCHAR" property="title2" />
+    <result column="title3" jdbcType="VARCHAR" property="title3" />
+    <result column="min_price" jdbcType="DECIMAL" property="minPrice" />
+    <result column="business_start_time1" jdbcType="TIME" property="businessStartTime1" />
+    <result column="business_end_time1" jdbcType="TIME" property="businessEndTime1" />
+    <result column="business_start_time2" jdbcType="TIME" property="businessStartTime2" />
+    <result column="business_end_time2" jdbcType="TIME" property="businessEndTime2" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="door_img" jdbcType="VARCHAR" property="doorImg" />
+    <result column="interior_img" jdbcType="VARCHAR" property="interiorImg" />
+    <result column="business_type" jdbcType="INTEGER" property="businessType" />
+    <result column="takeaway_phone" jdbcType="VARCHAR" property="takeawayPhone" />
+    <result column="is_plat_send" jdbcType="BOOLEAN" property="isPlatSend" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    merchant_id, user_id, phone, shop_name, shop_logo, shop_detail, email, contact_name, 
+    pcd, address, `location`, lng, lat, is_open, approval_status, street, delivery_fee, 
+    title1, title2, title3, min_price, business_start_time1, business_end_time1, business_start_time2, 
+    business_end_time2, province, door_img, interior_img, business_type, takeaway_phone, 
+    is_plat_send
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from merchant
+    where merchant_id = #{merchantId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from merchant
+    where merchant_id = #{merchantId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="merchant_id" keyProperty="merchantId" parameterType="com.hl.shangou.pojo.entity.Merchant" useGeneratedKeys="true">
+    insert into merchant (user_id, phone, shop_name, 
+      shop_logo, shop_detail, email, 
+      contact_name, pcd, address, 
+      `location`, lng, lat, is_open, 
+      approval_status, street, delivery_fee, 
+      title1, title2, title3, 
+      min_price, business_start_time1, business_end_time1, 
+      business_start_time2, business_end_time2, province, 
+      door_img, interior_img, business_type, 
+      takeaway_phone, is_plat_send)
+    values (#{userId,jdbcType=BIGINT}, #{phone,jdbcType=CHAR}, #{shopName,jdbcType=VARCHAR}, 
+      #{shopLogo,jdbcType=VARCHAR}, #{shopDetail,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{contactName,jdbcType=CHAR}, #{pcd,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{location,jdbcType=VARCHAR}, #{lng,jdbcType=DOUBLE}, #{lat,jdbcType=DOUBLE}, #{isOpen,jdbcType=BOOLEAN}, 
+      #{approvalStatus,jdbcType=VARCHAR}, #{street,jdbcType=VARCHAR}, #{deliveryFee,jdbcType=DECIMAL}, 
+      #{title1,jdbcType=VARCHAR}, #{title2,jdbcType=VARCHAR}, #{title3,jdbcType=VARCHAR}, 
+      #{minPrice,jdbcType=DECIMAL}, #{businessStartTime1,jdbcType=TIME}, #{businessEndTime1,jdbcType=TIME}, 
+      #{businessStartTime2,jdbcType=TIME}, #{businessEndTime2,jdbcType=TIME}, #{province,jdbcType=VARCHAR}, 
+      #{doorImg,jdbcType=VARCHAR}, #{interiorImg,jdbcType=VARCHAR}, #{businessType,jdbcType=INTEGER}, 
+      #{takeawayPhone,jdbcType=VARCHAR}, #{isPlatSend,jdbcType=BOOLEAN})
+  </insert>
+  <insert id="insertSelective" keyColumn="merchant_id" keyProperty="merchantId" parameterType="com.hl.shangou.pojo.entity.Merchant" useGeneratedKeys="true">
+    insert into merchant
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="shopName != null">
+        shop_name,
+      </if>
+      <if test="shopLogo != null">
+        shop_logo,
+      </if>
+      <if test="shopDetail != null">
+        shop_detail,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="contactName != null">
+        contact_name,
+      </if>
+      <if test="pcd != null">
+        pcd,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="location != null">
+        `location`,
+      </if>
+      <if test="lng != null">
+        lng,
+      </if>
+      <if test="lat != null">
+        lat,
+      </if>
+      <if test="isOpen != null">
+        is_open,
+      </if>
+      <if test="approvalStatus != null">
+        approval_status,
+      </if>
+      <if test="street != null">
+        street,
+      </if>
+      <if test="deliveryFee != null">
+        delivery_fee,
+      </if>
+      <if test="title1 != null">
+        title1,
+      </if>
+      <if test="title2 != null">
+        title2,
+      </if>
+      <if test="title3 != null">
+        title3,
+      </if>
+      <if test="minPrice != null">
+        min_price,
+      </if>
+      <if test="businessStartTime1 != null">
+        business_start_time1,
+      </if>
+      <if test="businessEndTime1 != null">
+        business_end_time1,
+      </if>
+      <if test="businessStartTime2 != null">
+        business_start_time2,
+      </if>
+      <if test="businessEndTime2 != null">
+        business_end_time2,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="doorImg != null">
+        door_img,
+      </if>
+      <if test="interiorImg != null">
+        interior_img,
+      </if>
+      <if test="businessType != null">
+        business_type,
+      </if>
+      <if test="takeawayPhone != null">
+        takeaway_phone,
+      </if>
+      <if test="isPlatSend != null">
+        is_plat_send,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=CHAR},
+      </if>
+      <if test="shopName != null">
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLogo != null">
+        #{shopLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="shopDetail != null">
+        #{shopDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null">
+        #{contactName,jdbcType=CHAR},
+      </if>
+      <if test="pcd != null">
+        #{pcd,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null">
+        #{lng,jdbcType=DOUBLE},
+      </if>
+      <if test="lat != null">
+        #{lat,jdbcType=DOUBLE},
+      </if>
+      <if test="isOpen != null">
+        #{isOpen,jdbcType=BOOLEAN},
+      </if>
+      <if test="approvalStatus != null">
+        #{approvalStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="street != null">
+        #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryFee != null">
+        #{deliveryFee,jdbcType=DECIMAL},
+      </if>
+      <if test="title1 != null">
+        #{title1,jdbcType=VARCHAR},
+      </if>
+      <if test="title2 != null">
+        #{title2,jdbcType=VARCHAR},
+      </if>
+      <if test="title3 != null">
+        #{title3,jdbcType=VARCHAR},
+      </if>
+      <if test="minPrice != null">
+        #{minPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="businessStartTime1 != null">
+        #{businessStartTime1,jdbcType=TIME},
+      </if>
+      <if test="businessEndTime1 != null">
+        #{businessEndTime1,jdbcType=TIME},
+      </if>
+      <if test="businessStartTime2 != null">
+        #{businessStartTime2,jdbcType=TIME},
+      </if>
+      <if test="businessEndTime2 != null">
+        #{businessEndTime2,jdbcType=TIME},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="doorImg != null">
+        #{doorImg,jdbcType=VARCHAR},
+      </if>
+      <if test="interiorImg != null">
+        #{interiorImg,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null">
+        #{businessType,jdbcType=INTEGER},
+      </if>
+      <if test="takeawayPhone != null">
+        #{takeawayPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="isPlatSend != null">
+        #{isPlatSend,jdbcType=BOOLEAN},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hl.shangou.pojo.entity.Merchant">
+    update merchant
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=CHAR},
+      </if>
+      <if test="shopName != null">
+        shop_name = #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLogo != null">
+        shop_logo = #{shopLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="shopDetail != null">
+        shop_detail = #{shopDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null">
+        contact_name = #{contactName,jdbcType=CHAR},
+      </if>
+      <if test="pcd != null">
+        pcd = #{pcd,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        `location` = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null">
+        lng = #{lng,jdbcType=DOUBLE},
+      </if>
+      <if test="lat != null">
+        lat = #{lat,jdbcType=DOUBLE},
+      </if>
+      <if test="isOpen != null">
+        is_open = #{isOpen,jdbcType=BOOLEAN},
+      </if>
+      <if test="approvalStatus != null">
+        approval_status = #{approvalStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="street != null">
+        street = #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryFee != null">
+        delivery_fee = #{deliveryFee,jdbcType=DECIMAL},
+      </if>
+      <if test="title1 != null">
+        title1 = #{title1,jdbcType=VARCHAR},
+      </if>
+      <if test="title2 != null">
+        title2 = #{title2,jdbcType=VARCHAR},
+      </if>
+      <if test="title3 != null">
+        title3 = #{title3,jdbcType=VARCHAR},
+      </if>
+      <if test="minPrice != null">
+        min_price = #{minPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="businessStartTime1 != null">
+        business_start_time1 = #{businessStartTime1,jdbcType=TIME},
+      </if>
+      <if test="businessEndTime1 != null">
+        business_end_time1 = #{businessEndTime1,jdbcType=TIME},
+      </if>
+      <if test="businessStartTime2 != null">
+        business_start_time2 = #{businessStartTime2,jdbcType=TIME},
+      </if>
+      <if test="businessEndTime2 != null">
+        business_end_time2 = #{businessEndTime2,jdbcType=TIME},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="doorImg != null">
+        door_img = #{doorImg,jdbcType=VARCHAR},
+      </if>
+      <if test="interiorImg != null">
+        interior_img = #{interiorImg,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null">
+        business_type = #{businessType,jdbcType=INTEGER},
+      </if>
+      <if test="takeawayPhone != null">
+        takeaway_phone = #{takeawayPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="isPlatSend != null">
+        is_plat_send = #{isPlatSend,jdbcType=BOOLEAN},
+      </if>
+    </set>
+    where merchant_id = #{merchantId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hl.shangou.pojo.entity.Merchant">
+    update merchant
+    set user_id = #{userId,jdbcType=BIGINT},
+      phone = #{phone,jdbcType=CHAR},
+      shop_name = #{shopName,jdbcType=VARCHAR},
+      shop_logo = #{shopLogo,jdbcType=VARCHAR},
+      shop_detail = #{shopDetail,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      contact_name = #{contactName,jdbcType=CHAR},
+      pcd = #{pcd,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      `location` = #{location,jdbcType=VARCHAR},
+      lng = #{lng,jdbcType=DOUBLE},
+      lat = #{lat,jdbcType=DOUBLE},
+      is_open = #{isOpen,jdbcType=BOOLEAN},
+      approval_status = #{approvalStatus,jdbcType=VARCHAR},
+      street = #{street,jdbcType=VARCHAR},
+      delivery_fee = #{deliveryFee,jdbcType=DECIMAL},
+      title1 = #{title1,jdbcType=VARCHAR},
+      title2 = #{title2,jdbcType=VARCHAR},
+      title3 = #{title3,jdbcType=VARCHAR},
+      min_price = #{minPrice,jdbcType=DECIMAL},
+      business_start_time1 = #{businessStartTime1,jdbcType=TIME},
+      business_end_time1 = #{businessEndTime1,jdbcType=TIME},
+      business_start_time2 = #{businessStartTime2,jdbcType=TIME},
+      business_end_time2 = #{businessEndTime2,jdbcType=TIME},
+      province = #{province,jdbcType=VARCHAR},
+      door_img = #{doorImg,jdbcType=VARCHAR},
+      interior_img = #{interiorImg,jdbcType=VARCHAR},
+      business_type = #{businessType,jdbcType=INTEGER},
+      takeaway_phone = #{takeawayPhone,jdbcType=VARCHAR},
+      is_plat_send = #{isPlatSend,jdbcType=BOOLEAN}
+    where merchant_id = #{merchantId,jdbcType=BIGINT}
+  </update>
+</mapper>
