@@ -135,11 +135,12 @@ public class RoleServiceImpl implements RoleService {
             //排序去重
             List<String> sortAndRepeatStr = StringUtil.SortAndRepeatStr(split);
 
-            //清空并重新赋值
+            //清空并重新赋值可以
             permissionIdsStr = new StringBuffer();
             for (String s : sortAndRepeatStr) {
                 permissionIdsStr.append(",");
                 permissionIdsStr.append(s);
+
             }
 
 

@@ -110,13 +110,17 @@ public class ShiroConfig {
     /**
      * 开启线程去循环检测Session的状态的
      * 建议大家用这个
+     * 其实这里有两种方式配置session过期检测，建议用这种，但是也可以不配置
      *
      * @return
      */
     @Bean
-    public ExecutorServiceSessionValidationScheduler executorServiceSessionValidationScheduler() {
+    public ExecutorServiceSessionValidationScheduler executorServiceSessionValidationScheduler(DefaultWebSessionManager defaultWebSessionManager) {
         ExecutorServiceSessionValidationScheduler sessionValidationScheduler = new ExecutorServiceSessionValidationScheduler();
+//        sessionValidationScheduler.setInterval(30 * 60 * 1000);// 设置循环检测的时间
         sessionValidationScheduler.setInterval(30 * 60 * 1000);// 设置循环检测的时间
+        sessionValidationScheduler.setSessionManager(defaultWebSessionManager);
+        sessionValidationScheduler.enableSessionValidation();// 开启session检测
         return sessionValidationScheduler;
     }
 
@@ -124,26 +128,16 @@ public class ShiroConfig {
      * 指的是ShiSession的会话管理员，它去管理者ShiroSession状态
      *
      * @param sessionDAO
-     * @param sessionValidationScheduler
      * @return
      */
     @Bean
-    public DefaultWebSessionManager defaultWebSessionManager(SessionDAO sessionDAO,
-                                                             ExecutorServiceSessionValidationScheduler sessionValidationScheduler) { // 6
+    public DefaultWebSessionManager defaultWebSessionManager(SessionDAO sessionDAO) { // 6
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-
         sessionManager.setGlobalSessionTimeout(30 * 60 * 1000);// 设置Session全局过期时间
-
         sessionManager.setDeleteInvalidSessions(true);// 如果检测到过期就删除Session
-
-        sessionManager.setSessionValidationScheduler(sessionValidationScheduler);// 设置循环检测器
-
         sessionManager.setSessionValidationSchedulerEnabled(true);// 开启循环检测
-
         sessionManager.setSessionDAO(sessionDAO);// 设置SessionDAO
-
         SimpleCookie sessionIdCookie = new SimpleCookie("qf-java-session-id");//设置一个SessionCookie
-
         sessionIdCookie.setHttpOnly(true);// 仅支持Http
 
         sessionIdCookie.setMaxAge(-1);// -1永不过期，0表示删除
