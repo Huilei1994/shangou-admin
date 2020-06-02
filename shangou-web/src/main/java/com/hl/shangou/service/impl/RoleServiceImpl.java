@@ -91,9 +91,6 @@ public class RoleServiceImpl implements RoleService {
 
 
 
-
-
-
     @Override
     public ResponseDTO ajaxAddPermissions(List<RoleVO> roleVOS,List<PermissionVO> permissionVOS) {
 
@@ -111,7 +108,6 @@ public class RoleServiceImpl implements RoleService {
             String permissions = roleVO.getPermissions();
 
             permissions =permissions+ permissionIdsStr.toString();
-
             //去除前后‘,’逗号
             if (permissions.startsWith(",")){
                 permissions=permissions.substring(1);
@@ -155,6 +151,13 @@ public class RoleServiceImpl implements RoleService {
     public ResponseDTO deleteRoles(List<Role> roles) {
         int x = roleDao.deleteByPrimaryKeys(roles);
         return ResponseDTO.get(x == roles.size());
+    }
+
+    @Override
+    public PageDTO getSystemRoles() {
+        List<RoleVO> roleVOS = roleDao.getSystemRoles();
+
+        return PageDTO.setPageData(roleVOS.size(), roleVOS);
     }
 
 

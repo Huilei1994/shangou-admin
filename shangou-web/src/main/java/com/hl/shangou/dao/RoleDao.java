@@ -29,4 +29,6 @@ public interface RoleDao {
     int addRole(RoleVO roleVO);
 
     int deleteByPrimaryKeys(@Param("ids") List<Role> roles);
+
+    List<RoleVO> getSystemRoles();
 }

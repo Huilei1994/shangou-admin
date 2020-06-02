@@ -5,6 +5,9 @@ import com.hl.shangou.pojo.dto.ResponseDTO;
 import com.hl.shangou.pojo.entity.Permission;
 import com.hl.shangou.pojo.query.PermissionQuery;
 import com.hl.shangou.pojo.vo.PermissionVO;
+import com.hl.shangou.pojo.vo.RoleVO;
+
+import java.util.List;
 
 public interface PermissionService {
     PageDTO ajaxList(PermissionQuery query);
@@ -16,4 +19,10 @@ public interface PermissionService {
     ResponseDTO addPermission(PermissionVO permissionVO);
 
     ResponseDTO ajaxSelectPermissions(String permissions);
+
+    ResponseDTO deletePermissions(List<Permission> permissions);
+
+    ResponseDTO addPermissionToRole(RoleVO roleVO);
+
+    ResponseDTO removePermissionFromRole(RoleVO roleVO);
 }

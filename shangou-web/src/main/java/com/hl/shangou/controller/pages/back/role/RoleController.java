@@ -145,6 +145,13 @@ public class RoleController {
         return roleService.deleteRoles(roles);
     }
 
+    //获取系统的权限
+    @RequestMapping("getSystemRoles")
+    @ResponseBody
+    PageDTO  getSystemRoles(){
+        return roleService.getSystemRoles();
+    }
+
 
 
 

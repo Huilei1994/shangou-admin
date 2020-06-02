@@ -169,11 +169,6 @@
     </select>
 
 
-
-
-
-
-
     <insert id="addRole" keyColumn="role_id" keyProperty="roleId"
             parameterType="com.hl.shangou.pojo.vo.RoleVO" useGeneratedKeys="true">
         insert into role
@@ -234,6 +229,16 @@
             #{r.roleId}
         </foreach>
     </delete>
+
+
+
+    <select id="getSystemRoles" resultType="com.hl.shangou.pojo.vo.RoleVO">
+        select
+        <include refid="Base_Column_List"/>
+        from role where `system`=1
+        order by sort
+    </select>
+
 
 
 

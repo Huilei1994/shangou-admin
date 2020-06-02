@@ -35,7 +35,6 @@ public interface BaseService {
                         PermissionVO p = permissionVOS1.get(0);
                         li.add(p);
                     }
-
                 }
                 r.setPermissionVOS(li);
             }
