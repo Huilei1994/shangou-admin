@@ -36,6 +36,7 @@ public interface BaseService {
                         li.add(p);
                     }
                 }
+
                 r.setPermissionVOS(li);
             }
         }
