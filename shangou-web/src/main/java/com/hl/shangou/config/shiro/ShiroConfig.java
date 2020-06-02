@@ -33,7 +33,6 @@ import java.util.Map;
  */
 @Configuration
 public class ShiroConfig {
-
     @Bean
     public UserRealm userRealm() {// 自定义认证和授权的（领域类）
         return new UserRealm();

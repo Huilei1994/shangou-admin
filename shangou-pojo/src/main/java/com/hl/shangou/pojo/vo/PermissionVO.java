@@ -9,4 +9,8 @@ import lombok.Data;
  */
 @Data
 public class PermissionVO extends Permission {
+
+
+    private boolean LAY_CHECKED = false;
+
 }

@@ -12,6 +12,7 @@ import com.hl.shangou.service.RoleService;
 
 import com.hl.shangou.util.Common.StringUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -68,35 +69,24 @@ public class RoleServiceImpl implements RoleService {
 
         return ResponseDTO.fail("fail");
     }
-
     @Override
     public ResponseDTO ajaxEdit(Role role) {
-
         if (role != null) {
             int i = roleDao.updateByPrimaryKeySelective(role);
-
             if (i >0) {
                 return ResponseDTO.ok("success");
             }
         }
-
         return ResponseDTO.fail("fail");
     }
 
     @Override
     public ResponseDTO ajaxSelectPermissions(String permissions) {
 
-        StringBuffer permissionsBuffer = new StringBuffer();
-        if (permissions =="" || permissions == null  ) {
-            return ResponseDTO.fail("查询失败");
-        }
-
         List<PermissionVO> permissionVOS = permissionDao.selectPermissionsByIds(permissions);
-        for (PermissionVO permissionVO : permissionVOS) {
-            permissionsBuffer.append(permissionVO.getName() + "  ");
-        }
 
-        return ResponseDTO.ok("查询成功",permissionsBuffer);
+
+        return ResponseDTO.ok("成功",permissionVOS);
     }
 
 
@@ -161,7 +151,11 @@ public class RoleServiceImpl implements RoleService {
         return ResponseDTO.ok("成功");
     }
 
-
+    @Override
+    public ResponseDTO deleteRoles(List<Role> roles) {
+        int x = roleDao.deleteByPrimaryKeys(roles);
+        return ResponseDTO.get(x == roles.size());
+    }
 
 
 }

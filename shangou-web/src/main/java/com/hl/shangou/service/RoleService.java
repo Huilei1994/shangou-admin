@@ -26,4 +26,6 @@ public interface RoleService {
     ResponseDTO ajaxSelectPermissions(String permissions);
 
     ResponseDTO ajaxAddPermissions(List<RoleVO> roleVOS, List<PermissionVO> permissionVOS);
+
+    ResponseDTO deleteRoles(List<Role> roles);
 }

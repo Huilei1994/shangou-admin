@@ -103,11 +103,11 @@ public class RoleController {
      */
     @RequestMapping("ajaxSelectPermissions")
     @ResponseBody
-    Object ajaxSelectPermissions(String permissions) {
+    ResponseDTO ajaxSelectPermissions(String permissions) {
 
         ResponseDTO responseDTO = roleService.ajaxSelectPermissions(permissions);
 
-        return responseDTO ;
+        return  responseDTO;
     }
 
 
@@ -134,6 +134,18 @@ public class RoleController {
 
         return  responseDTO;
     }
+
+
+
+    @RequestMapping("deleteRoles")
+    @ResponseBody
+    ResponseDTO deleteRoles(@RequestBody List<Role> roles) {
+
+
+        return roleService.deleteRoles(roles);
+    }
+
+
 
 
 

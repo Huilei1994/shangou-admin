@@ -12,7 +12,7 @@ import java.util.List;
  * creator：杜夫人
  * date: 2020/5/21
  */
-public interface UserService {
+public interface UserService  extends BaseService{
 
 
     /**

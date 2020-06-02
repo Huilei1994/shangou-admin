@@ -24,6 +24,7 @@
     delete from role
     where role_id = #{roleId,jdbcType=INTEGER}
   </delete>
+
     <insert id="insert" keyColumn="role_id" keyProperty="roleId" parameterType="com.hl.shangou.pojo.entity.Role"
             useGeneratedKeys="true">
     insert into role (`name`, sort, icon,
@@ -223,6 +224,16 @@
             </if>
         </trim>
     </insert>
+
+
+
+
+    <delete id="deleteByPrimaryKeys">
+        delete from role where role_id in
+        <foreach collection="ids" open="(" close=")" item="r" separator=",">
+            #{r.roleId}
+        </foreach>
+    </delete>
 
 
 

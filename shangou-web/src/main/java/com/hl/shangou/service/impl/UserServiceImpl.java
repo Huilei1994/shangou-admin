@@ -40,23 +40,13 @@ public class UserServiceImpl implements UserService {
     public List<RoleVO> selectHisRolesByPhone(String phone) {
         UserVO u = userDao.selectUserByPhone(phone);
         if (!StringUtils.isEmpty(u.getRoles())) {
+
             List<RoleVO> roles = roleDao.selectHisRolesByRoles(u.getRoles());
             // 在查询完成roles之后，我们应该 roles的permissionVOS赋值
-            List<PermissionVO> permissionVOS = this.selectHisPermissionByRoles(roles);// 查出所有的权限
-            Map<Integer, List<PermissionVO>> collect = permissionVOS.stream().collect(Collectors.groupingBy(PermissionVO::getPermissionId));
-            for (RoleVO r : roles) {
-                String permissions = r.getPermissions();
-                if (!StringUtils.isEmpty(permissions)) {
-                    String[] split = permissions.split(",");
-                    List<PermissionVO> li = new ArrayList<>();
-                    for (String s : split) {
-                        PermissionVO p = collect.get(Integer.valueOf(s)).get(0);
-                        li.add(p);
-                    }
-                    r.setPermissionVOS(li);
-                }
+            if (!CollectionUtils.isEmpty(roles)) {
+                List<PermissionVO> permissionVOS = this.selectHisPermissionByRoles(roles);// 查出所有的权限
+                return getRoleVOList(roles, permissionVOS);
             }
-            return roles;
         }
         return null;
     }
@@ -64,14 +54,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<PermissionVO> selectHisPermissionByRoles(List<RoleVO> roles) {
         List<PermissionVO> list = new ArrayList<>();
-//        // 第一种 ：
-//        for (RoleVO role : roles) {
-//            List<PermissionVO> permissionVOS = permissionDao.selectPermissionsByIds(role.getPermissions());
-//            list.addAll(permissionVOS);
-////            Collections.addAll(list, permissionVOS);// 这里有个把两个集合加入到一个集合里边去
-//        }
-        // 断言工具
-//        Assert.notNull(roles, "传递的集合为null");
+
         if (!CollectionUtils.isEmpty(roles)) {
             Set<String> paramSet = new TreeSet<>();// 查询参数集合
             for (RoleVO role : roles) {// 在内存之中进行的。效率基本最高的
@@ -82,7 +65,7 @@ public class UserServiceImpl implements UserService {
             }
             list = permissionDao.selectPermissionsBySet(paramSet);
         }
-        // 第三种
+
         return list;
     }
 
@@ -94,6 +77,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkPhoneExist(String phone) {
         UserVO userVO = userDao.selectUserByPhone(phone);
-        return userVO!=null;
+        return userVO != null;
     }
 }
