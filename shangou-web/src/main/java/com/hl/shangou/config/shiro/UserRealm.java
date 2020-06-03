@@ -1,5 +1,6 @@
 package com.hl.shangou.config.shiro;
 
+import com.hl.shangou.pojo.entity.User;
 import com.hl.shangou.pojo.query.UserQuery;
 import com.hl.shangou.pojo.vo.RoleVO;
 import com.hl.shangou.pojo.vo.UserVO;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,38 +49,53 @@ public class UserRealm extends AuthorizingRealm {
         Session session = SecurityUtils.getSubject().getSession();
         Object code = session.getAttribute("code");
 
+
         String password = new String((char[]) credentials);// 前端传递过来的// String.valueOf((char[]) credentials)
         UserQuery query = new UserQuery();
         query.setPhone((String) principal);
 
         UserVO dbUser = userService.selectDbUserByPhone(query);// 拿到了数据库的用户
 
-        if (dbUser == null) {
-            throw new UnknownAccountException("账户或密码错误");
+        if (code == null) {
+            // 账户虽然存在，就要开始比较密码
+            if (!PasswordUtil.encodePassword(password).equals(dbUser.getPassword())) {
+                // 缓存数据库里边存当前用户密码错误的次数
+                throw new CredentialsException("账户或密码错误");
+            }
         } else {
-            if (code == null) {
+            //验证码错误就直接抛出异常
+            //判断是否是后台登录(只有不是的时候才会存在session中，是后台这个就是null)
+            Object isBack = session.getAttribute("isBack");
+            if (!code.equals(password)) {
+                throw new CredentialsException("验证码错误");
+            }
+            if (dbUser == null) {
+                if (isBack != null) {
+                    boolean isBackFlag = (boolean) isBack;
+                    if (!isBackFlag) { //是前台验证码操作且没有用户
 
-                // 账户虽然存在，就要开始比较密码
-                if (!PasswordUtil.encodePassword(password).equals(dbUser.getPassword())) {
-                    // 缓存数据库里边存当前用户密码错误的次数
-                    throw new CredentialsException("账户或密码错误");
-                }
-            }else {
-                //验证码错误就直接抛出异常
-                if (!code.equals(password)) {
-                    throw new CredentialsException("验证码错误");
+                        User u = new User();
+                        u.setNickName("请改昵称");
+                        u.setPhone(query.getPhone());
+                        u.setLastLoginTime(new Date());
+//                            u.setLastLoginIp();
+                        dbUser = userService.addUser(u);
+
+                    }
+                }else {
+                    throw new UnknownAccountException("账户或密码错误");
                 }
             }
-        }
-        //第二种方式
 
+
+        }
 
         session.setAttribute("userId", dbUser.getUserId());
         session.setAttribute("nickName", dbUser.getNickName());
         session.setAttribute("phone", dbUser.getPhone());
         // 设置角色
         List<RoleVO> roleVOS = userService.selectHisRolesByPhone(dbUser.getPhone());
-        session.setAttribute("hisRoles",roleVOS);
+        session.setAttribute("hisRoles", roleVOS);
 
 
         // 设置权限

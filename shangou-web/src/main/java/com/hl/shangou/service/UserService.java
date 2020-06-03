@@ -1,6 +1,7 @@
 package com.hl.shangou.service;
 
 
+import com.hl.shangou.pojo.entity.User;
 import com.hl.shangou.pojo.query.UserQuery;
 import com.hl.shangou.pojo.vo.PermissionVO;
 import com.hl.shangou.pojo.vo.RoleVO;
@@ -30,4 +31,6 @@ public interface UserService  extends BaseService{
     UserVO selectDbUserByPhone(UserQuery query);
 
     boolean checkPhoneExist(String phone);
+
+    UserVO addUser(User u);
 }

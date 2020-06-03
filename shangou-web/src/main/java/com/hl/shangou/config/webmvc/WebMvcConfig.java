@@ -62,9 +62,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/upload/**").addResourceLocations(docPath);
     }
 
-    public static final String WINDOW_UPLOAD_PATH = "N:\\";
+    public static final String WINDOW_UPLOAD_PATH = "E:\\";
     public static final String LINUX_UPLOAD_PATH = "/";
-    public static final String WINDOW_CONFIG_UPLOAD_PATH = "file:N:\\upload\\";
+    public static final String WINDOW_CONFIG_UPLOAD_PATH = "file:E:\\upload\\";
     public static final String LINUX_CONFIG_UPLOAD_PATH = "file:/upload/";
 
 

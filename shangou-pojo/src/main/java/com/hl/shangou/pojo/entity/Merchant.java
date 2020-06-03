@@ -1,9 +1,10 @@
 package com.hl.shangou.pojo.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * merchant
@@ -52,7 +53,7 @@ public class Merchant implements Serializable {
     private String contactName;
 
     /**
-     * 省市区（门店区域）
+     * 省市区（门店区域）：重庆市-重庆市-渝中区
      */
     private String pcd;
 
@@ -62,7 +63,7 @@ public class Merchant implements Serializable {
     private String address;
 
     /**
-     * 用户输入的坐标
+     * 用户输入的坐标：百脑汇大夕阳国际
      */
     private String location;
 
@@ -87,14 +88,9 @@ public class Merchant implements Serializable {
     private String approvalStatus;
 
     /**
-     * 店铺所在的街道
+     * 店铺所在的街道（营业执照上面的街道）
      */
     private String street;
-
-    /**
-     * 配送费
-     */
-    private BigDecimal deliveryFee;
 
     /**
      * 标语1
@@ -165,6 +161,36 @@ public class Merchant implements Serializable {
      * 是否开启了平台配送：1或0
      */
     private Boolean isPlatSend;
+
+    /**
+     * 法人身份证正面
+     */
+    private String cardUserImg;
+
+    /**
+     * 法人身份证国徽面照片
+     */
+    private String cardGuohuiImg;
+
+    /**
+     * 法人手持身份证正面照片
+     */
+    private String cardHandImg;
+
+    /**
+     * 营业执照图片
+     */
+    private String businessLicenseImg;
+
+    /**
+     * 安全许可证图片
+     */
+    private String securityPermitImg;
+
+    /**
+     * 其他凭证
+     */
+    private String otherVoucherImg;
 
     private static final long serialVersionUID = 1L;
 }

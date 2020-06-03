@@ -6,7 +6,6 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-
     url: jdbc:mysql://120.25.223.121:3306/shangou_db?serverTimezone=Asia/Shanghai
 #    url: jdbc:mysql://120.25.223.121/demo_db?serverTimezone=Asia/Shanghai
 

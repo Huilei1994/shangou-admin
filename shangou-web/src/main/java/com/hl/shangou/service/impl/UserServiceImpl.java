@@ -3,6 +3,7 @@ package com.hl.shangou.service.impl;
 import com.hl.shangou.dao.PermissionDao;
 import com.hl.shangou.dao.RoleDao;
 import com.hl.shangou.dao.UserDao;
+import com.hl.shangou.pojo.entity.User;
 import com.hl.shangou.pojo.query.UserQuery;
 import com.hl.shangou.pojo.vo.PermissionVO;
 import com.hl.shangou.pojo.vo.RoleVO;
@@ -78,5 +79,19 @@ public class UserServiceImpl implements UserService {
     public boolean checkPhoneExist(String phone) {
         UserVO userVO = userDao.selectUserByPhone(phone);
         return userVO != null;
+    }
+
+    @Override
+    public UserVO addUser(User u) {
+        int i = userDao.insertSelective(u);
+//        添加成功就把这些信息存到vo中返回
+        if (i == 1) {
+            UserVO uVO = new UserVO();
+            uVO.setUserId(u.getUserId());
+            uVO.setNickName(u.getNickName());
+            uVO.setPhone(u.getPhone());
+            return uVO;
+        }
+        return null;
     }
 }
