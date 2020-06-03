@@ -574,11 +574,14 @@
 
                         let permissionData=iframe.layui.test();
                         console.log(permissionData);
+
                         if (permissionData[0]==null){
 
                             layer.msg("请选择权限");
                             return false;
                         }
+
+
 
                         $.ajax({
                             url: "/pages/back/role/ajaxAddPermissions",// 请求数据服务器地址，只能是当前项目，JSONP才能访问外网（需要服务器配合才能用）
@@ -595,9 +598,13 @@
                                 console.log(res);
                                 if (res.status == 200) {
                                     layer.msg("添加成功");
+
                                     table.reload('roleTable', {
                                         url: '/pages/back/role/ajaxList'
                                     });
+
+                                    table.render();
+
                                 }
                             },
                             type: 'post',// ajax请求的方式，post或get

@@ -36,20 +36,24 @@ public class RoleController {
         return "pages/back/role/role-list";
     }
 
+
     /**
      * 角色列表界面的添加权限弹框
      * @return
      */
+
     @RequestMapping("pList")
     String pList() {
         return "pages/back/role/showPermissions";
     }
+
 
     /**
      * 获取角色信息
      * @param query
      * @return
      */
+
     @RequestMapping("ajaxList")
     @ResponseBody
     PageDTO ajaxList(RoleQuery query) {
@@ -119,22 +123,16 @@ public class RoleController {
     @RequestMapping("ajaxAddPermissions")
     @ResponseBody
     ResponseDTO ajaxAddPermissions(@RequestBody RPVO rpvo) {
-
         if (rpvo == null || rpvo.getPermissions()==null || rpvo.getRoles()==null) {
             return ResponseDTO.fail("没有数据");
         }
-
         List<PermissionVO> psVOS=rpvo.getPermissions();
         List<RoleVO> rsVOS=rpvo.getRoles();
-
-
         ResponseDTO responseDTO = roleService.ajaxAddPermissions(rsVOS,psVOS);
-
         System.err.println(rpvo);
 
         return  responseDTO;
     }
-
 
 
     @RequestMapping("deleteRoles")
@@ -151,6 +149,8 @@ public class RoleController {
     PageDTO  getSystemRoles(){
         return roleService.getSystemRoles();
     }
+
+
 
 
 

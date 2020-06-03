@@ -80,8 +80,10 @@ public class UserRealm extends AuthorizingRealm {
         List<RoleVO> roleVOS = userService.selectHisRolesByPhone(dbUser.getPhone());
         session.setAttribute("hisRoles",roleVOS);
 
+
         // 设置权限
         return new SimpleAuthenticationInfo(authenticationToken.getPrincipal(), authenticationToken.getCredentials(), "userRealm");
+
 
     }
 

@@ -27,7 +27,9 @@ public interface RoleService {
 
     ResponseDTO ajaxAddPermissions(List<RoleVO> roleVOS, List<PermissionVO> permissionVOS);
 
+
     ResponseDTO deleteRoles(List<Role> roles);
 
     PageDTO getSystemRoles();
+
 }

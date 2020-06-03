@@ -160,5 +160,4 @@ public class RoleServiceImpl implements RoleService {
         return PageDTO.setPageData(roleVOS.size(), roleVOS);
     }
 
-
 }
