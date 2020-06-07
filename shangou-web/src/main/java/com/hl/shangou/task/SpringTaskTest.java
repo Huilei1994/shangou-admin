@@ -1,8 +1,17 @@
 package com.hl.shangou.task;
 
+import com.hl.shangou.config.webmvc.WebMvcConfig;
+import com.hl.shangou.dao.ImgCacheDao;
+import com.hl.shangou.pojo.entity.ImgCache;
+import com.hl.shangou.service.ImgCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import javax.annotation.Resource;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -13,8 +22,35 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class SpringTaskTest {
     Logger logger = LoggerFactory.getLogger(SpringTaskTest.class);
 
+
+    @Resource
+    ImgCacheService imgCacheService;
+
+
+    @Scheduled(fixedDelay = 60*60*1000)// 每过1H但是是以方法运行完之后开始算
+    public void clearImgCache() {
+        Calendar instance = Calendar.getInstance();
+        instance.add(Calendar.HOUR,-1); //拿到一小时之前的时间点
+        Date time = instance.getTime(); //转换为时间对象
+        List<ImgCache> allImgCache = imgCacheService.getAllImgCache(time);
+
+        //循环删除获取得到图片
+        for (ImgCache cache : allImgCache) {
+            //删除之前打印删除的日志
+            boolean b =WebMvcConfig.deleteFile(cache.getImgUrl());
+            logger.info("正在定时删除缓存图片"+cache.getImgUrl()+"结果是"+b);
+            if (b) {
+                imgCacheService.deleteByPrimaryKey(cache.getImgUrl());
+            }
+
+        }
+
+    }
+
+/*
     @Scheduled(cron = "3/4 * * * * ?")
     public void addUser() {// 单线程
+
         try {
             System.err.println("定时添加用户了哦" + System.currentTimeMillis() / 1000);
             logger.trace("trace级别");
@@ -53,5 +89,5 @@ public class SpringTaskTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

@@ -49,7 +49,6 @@ public class UserRealm extends AuthorizingRealm {
         Session session = SecurityUtils.getSubject().getSession();
         Object code = session.getAttribute("code");
 
-
         String password = new String((char[]) credentials);// 前端传递过来的// String.valueOf((char[]) credentials)
         UserQuery query = new UserQuery();
         query.setPhone((String) principal);
@@ -73,27 +72,24 @@ public class UserRealm extends AuthorizingRealm {
                 if (isBack != null) {
                     boolean isBackFlag = (boolean) isBack;
                     if (!isBackFlag) { //是前台验证码操作且没有用户
-
                         User u = new User();
                         u.setNickName("请改昵称");
                         u.setPhone(query.getPhone());
                         u.setLastLoginTime(new Date());
 //                            u.setLastLoginIp();
                         dbUser = userService.addUser(u);
-
                     }
                 }else {
                     throw new UnknownAccountException("账户或密码错误");
                 }
             }
-
-
         }
-
         session.setAttribute("userId", dbUser.getUserId());
         session.setAttribute("nickName", dbUser.getNickName());
+        session.setAttribute("realName", dbUser.getRealName());
         session.setAttribute("phone", dbUser.getPhone());
         // 设置角色
+
         List<RoleVO> roleVOS = userService.selectHisRolesByPhone(dbUser.getPhone());
         session.setAttribute("hisRoles", roleVOS);
 

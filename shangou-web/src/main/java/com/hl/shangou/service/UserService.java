@@ -1,10 +1,13 @@
 package com.hl.shangou.service;
 
 
+import com.hl.shangou.pojo.dto.PageDTO;
+import com.hl.shangou.pojo.dto.ResponseDTO;
 import com.hl.shangou.pojo.entity.User;
 import com.hl.shangou.pojo.query.UserQuery;
 import com.hl.shangou.pojo.vo.PermissionVO;
 import com.hl.shangou.pojo.vo.RoleVO;
+import com.hl.shangou.pojo.vo.UserAddRolesVO;
 import com.hl.shangou.pojo.vo.UserVO;
 
 import java.util.List;
@@ -33,4 +36,16 @@ public interface UserService  extends BaseService{
     boolean checkPhoneExist(String phone);
 
     UserVO addUser(User u);
+
+    PageDTO ajaxUserList(UserQuery userQuery);
+
+    ResponseDTO ajaxAddUser(User user);
+
+    ResponseDTO ajaxEditUser(User user);
+
+    ResponseDTO ajaxDeleteUser(Long userId);
+
+    ResponseDTO ajaxDeleteUsers(List<Long> userIds);
+
+    ResponseDTO ajaxAddRoles(UserAddRolesVO userAddRolesVO);
 }

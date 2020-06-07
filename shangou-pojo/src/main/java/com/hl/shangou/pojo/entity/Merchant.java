@@ -192,5 +192,20 @@ public class Merchant implements Serializable {
      */
     private String otherVoucherImg;
 
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 最近更新时间
+     */
+    private Date updateTime;
+
+    /**
+     * 最大配送范围：单位km
+     */
+    private Double maxDeliveryArea;
+
     private static final long serialVersionUID = 1L;
 }

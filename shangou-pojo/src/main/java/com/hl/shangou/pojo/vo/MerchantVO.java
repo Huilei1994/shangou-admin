@@ -8,5 +8,8 @@ import lombok.Data;
 @Data
 public class MerchantVO extends Merchant {
 
+
+    //审批日志
+    private String note;
 }
 

@@ -41,7 +41,6 @@ public class RoleController {
      * 角色列表界面的添加权限弹框
      * @return
      */
-
     @RequestMapping("pList")
     String pList() {
         return "pages/back/role/showPermissions";

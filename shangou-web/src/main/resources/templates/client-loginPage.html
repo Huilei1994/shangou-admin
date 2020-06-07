@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragment/js::js"></div>
+<body style="overflow-x: hidden">
+<style>
+    #code::-webkit-input-placeholder {
+        color: gray;
+        font-size: 10px;
+    }
+</style>
+<!--#fd0c2c到#fd2a47-->
+<div class="layui-row" style="position: absolute;height: 100%;width: 100%">
+    <div class="layui-col-xs12 layui-col-md6 layui-col-md-offset3 "
+         style="height: 100%;position: relative">
+        <div style="padding:0 10px;margin-top: 100px;border: solid orange 1px;border-radius: 25px">
+            <div style="display: flex;align-items: center;justify-content: space-between">
+                <span style="float: left;padding: 10px;color: orange" onclick="window.history.go(-1)"><i
+                        class="layui-icon layui-icon-return"
+                        style="font-weight: bold"></i></span>
+
+                <h2 style="text-align: center; color: orange">
+                    <b>闪购登录/注册</b>
+                </h2>
+                <!--<span style="width: 20px"></span>-->
+                <span style=" float:right;padding: 10px;color: orange" onclick="toBack()"><i
+                        class="layui-icon layui-icon-user"
+                        style="font-weight: bold"></i></span>
+            </div>
+
+            <div>
+                <div>
+                    <form class="layui-form layui-form-pane" style="padding: 20px">
+                        <div style="display: flex;border-bottom: solid 1px  lightgray;justify-content: center;padding: 10px">
+                            <div class="loginType"
+                                 style="font-size: 20px;padding: 5px 10px;cursor: pointer;color: orange"
+                                 id="passwordLogin"
+                            >密码登录
+                            </div>
+                            <div class="loginType"
+                                 style="font-size: 20px;padding: 5px 10px;margin-left: 20px;cursor: pointer"
+                                 id="codeLogin"
+                            >短信登录
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-top: 10px">
+                            <label class="layui-form-label">手机号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="phone" id="phone" placeholder="请输入密码" autocomplete="off"
+                                       lay-verify="required|phone|number"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id="passDiv">
+                            <label class="layui-form-label">密码</label>
+                            <div class="layui-input-block">
+                                <input type="password" name="password" placeholder="请输入密码" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id="codeDiv" style="display: none">
+                            <label class="layui-form-label">验证码</label>
+                            <div class="layui-input-block" style="display: flex">
+                                <input type="tel" name="code" id="code" placeholder="请输入6位数验证码"
+                                       class="layui-input" style="border-radius: 0;border-right: none">
+                                <button id="sendCode" type="button" class="layui-btn-primary layui-btn"
+                                        style="border-radius: 0 3px 3px 0">
+                                    发送验证码
+                                </button>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn " lay-submit lay-filter="loginForm"
+                                    style="width: 100%;background: orange">登录
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript" type="text/javascript">
+    // top:指的是当前页面最外层的窗口
+    // self:指的是当前页面的窗口
+    if (top !== self) {// 顶层窗口不是当前窗口，顶层窗口地址设置为当前窗口地址
+        top.location.href = self.location.href;// 解决iframe登陆页面 窗口内嵌到后台中的问题
+    }
+    let loginType = 'password';// 登录的方式
+    $(function () {
+        layui.use(['layer', 'form'], function () {
+            let layer = layui.layer;
+            let form = layui.form;
+            $("#passwordLogin").click(function () {// 这里用的ES6语法，那么这个this就不是当前jsDom对象了；如果用layui和thymeleaf开发，
+                // 那么我们不用箭头，如果用vue建议全都用箭头函数
+                loginType = 'password';
+                $("#passDiv").css({display: ''})
+                $("#codeLogin").css({color: ''});
+                $(this).css({color: 'orange'});
+                $("#code").val("");
+                $("#codeDiv").css({display: 'none'})
+            });
+            $("#codeLogin").click(function () {
+                loginType = 'code';
+                $("#passwordLogin").css({color: ''})
+                $(this).css({color: 'orange'});
+                $("#codeDiv").css({display: ''})
+                $("#passDiv").css({display: 'none'})
+            });
+            form.on('submit(loginForm)', function (data) {
+                console.log(loginType)
+                if (loginType == 'password') {// 表示是密码提交，那么就应该验证密码
+                    if (data.field.password.length < 6) {
+                        layer.msg("密码长度少于6位！");
+                        return false;// 结束了，不要往后走了
+                    }
+                } else if (loginType == 'code') {// 验证码登录的时候
+                    if (!/^\d{6}$/.test(data.field.code)) {
+                        layer.msg("验证码是6位整数！");
+                        return false;// 结束了，不要往后走了
+                    }
+                }
+                // 如果能够走到这异步，那么就发送ajax请求去登录
+                $.post('/login', data.field, function (res) {
+                    layer.msg(res.msg);
+                    if (res.res) {
+                        window.location = '/loginSuccess?isBack=0';
+
+                    }
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+            $("#sendCode").click(function () {
+                $.post('/sendClientLoginCode'
+                    , {phone: $("#phone").val()}
+                    , function (res) {
+                        layer.msg(res.msg);
+                        if (res.res) {
+                            let x = 60;
+                            let inter = setInterval(function () {
+                                if (x > 0) {
+                                    $("#sendCode").text(x + '秒后重发');
+                                    x--;
+                                } else {
+                                    $("#sendCode").text('发送验证码');
+                                    clearInterval(inter);// 取消循环函数；
+                                }
+                            }, 1000)
+                        }
+                    });
+            });
+
+        });
+    })
+
+    function toBack() {
+        window.location.href ="/loginPage?isBack=1"
+    }
+</script>
+
+</body>
+</html>

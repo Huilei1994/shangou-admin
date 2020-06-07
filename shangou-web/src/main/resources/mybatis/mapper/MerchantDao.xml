@@ -38,6 +38,9 @@
     <result column="business_license_img" jdbcType="VARCHAR" property="businessLicenseImg" />
     <result column="security_permit_img" jdbcType="VARCHAR" property="securityPermitImg" />
     <result column="other_voucher_img" jdbcType="VARCHAR" property="otherVoucherImg" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="max_delivery_area" jdbcType="DOUBLE" property="maxDeliveryArea" />
   </resultMap>
   <sql id="Base_Column_List">
     merchant_id, user_id, phone, shop_name, shop_logo, shop_detail, email, contact_name, 
@@ -45,7 +48,7 @@
     title3, min_price, business_start_time1, business_end_time1, business_start_time2, 
     business_end_time2, province, door_img, interior_img, business_type, takeaway_phone, 
     is_plat_send, card_user_img, card_guohui_img, card_hand_img, business_license_img, 
-    security_permit_img, other_voucher_img
+    security_permit_img, other_voucher_img, create_time, update_time, max_delivery_area
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -53,7 +56,7 @@
     from merchant
     where merchant_id = #{merchantId,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from merchant
     where merchant_id = #{merchantId,jdbcType=BIGINT}
   </delete>
@@ -69,7 +72,8 @@
       interior_img, business_type, takeaway_phone, 
       is_plat_send, card_user_img, card_guohui_img, 
       card_hand_img, business_license_img, security_permit_img, 
-      other_voucher_img)
+      other_voucher_img, create_time, update_time, 
+      max_delivery_area)
     values (#{userId,jdbcType=BIGINT}, #{phone,jdbcType=CHAR}, #{shopName,jdbcType=VARCHAR}, 
       #{shopLogo,jdbcType=VARCHAR}, #{shopDetail,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{contactName,jdbcType=CHAR}, #{pcd,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
@@ -81,11 +85,16 @@
       #{interiorImg,jdbcType=VARCHAR}, #{businessType,jdbcType=INTEGER}, #{takeawayPhone,jdbcType=VARCHAR}, 
       #{isPlatSend,jdbcType=BOOLEAN}, #{cardUserImg,jdbcType=VARCHAR}, #{cardGuohuiImg,jdbcType=VARCHAR}, 
       #{cardHandImg,jdbcType=VARCHAR}, #{businessLicenseImg,jdbcType=VARCHAR}, #{securityPermitImg,jdbcType=VARCHAR}, 
-      #{otherVoucherImg,jdbcType=VARCHAR})
+      #{otherVoucherImg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{maxDeliveryArea,jdbcType=DOUBLE})
   </insert>
-  <insert id="insertSelective" keyColumn="merchant_id" keyProperty="merchantId" parameterType="com.hl.shangou.pojo.entity.Merchant" useGeneratedKeys="true">
+  <insert id="insertSelective" keyColumn="merchant_id" keyProperty="merchantId" parameterType="com.hl.shangou.pojo.entity.Merchant">
     insert into merchant
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null">
+        merchant_id,
+      </if>
+
       <if test="userId != null">
         user_id,
       </if>
@@ -191,8 +200,21 @@
       <if test="otherVoucherImg != null">
         other_voucher_img,
       </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="maxDeliveryArea != null">
+        max_delivery_area,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+      <if test="merchantId != null">
+        #{merchantId,jdbcType=BIGINT},
+      </if>
       <if test="userId != null">
         #{userId,jdbcType=BIGINT},
       </if>
@@ -298,8 +320,18 @@
       <if test="otherVoucherImg != null">
         #{otherVoucherImg,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maxDeliveryArea != null">
+        #{maxDeliveryArea,jdbcType=DOUBLE},
+      </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.hl.shangou.pojo.entity.Merchant">
     update merchant
     <set>
@@ -408,6 +440,15 @@
       <if test="otherVoucherImg != null">
         other_voucher_img = #{otherVoucherImg,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maxDeliveryArea != null">
+        max_delivery_area = #{maxDeliveryArea,jdbcType=DOUBLE},
+      </if>
     </set>
     where merchant_id = #{merchantId,jdbcType=BIGINT}
   </update>
@@ -447,7 +488,404 @@
       card_hand_img = #{cardHandImg,jdbcType=VARCHAR},
       business_license_img = #{businessLicenseImg,jdbcType=VARCHAR},
       security_permit_img = #{securityPermitImg,jdbcType=VARCHAR},
-      other_voucher_img = #{otherVoucherImg,jdbcType=VARCHAR}
+      other_voucher_img = #{otherVoucherImg,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      max_delivery_area = #{maxDeliveryArea,jdbcType=DOUBLE}
     where merchant_id = #{merchantId,jdbcType=BIGINT}
   </update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <insert id="ajaxAddMerchant"  parameterType="com.hl.shangou.pojo.vo.MerchantVO">
+    insert into merchant
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null">
+        merchant_id,
+      </if>
+
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="shopName != null">
+        shop_name,
+      </if>
+      <if test="shopLogo != null">
+        shop_logo,
+      </if>
+      <if test="shopDetail != null">
+        shop_detail,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="contactName != null">
+        contact_name,
+      </if>
+      <if test="pcd != null">
+        pcd,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="location != null">
+        `location`,
+      </if>
+      <if test="lng != null">
+        lng,
+      </if>
+      <if test="lat != null">
+        lat,
+      </if>
+      <if test="isOpen != null">
+        is_open,
+      </if>
+      <if test="approvalStatus != null">
+        approval_status,
+      </if>
+      <if test="street != null">
+        street,
+      </if>
+      <if test="title1 != null">
+        title1,
+      </if>
+      <if test="title2 != null">
+        title2,
+      </if>
+      <if test="title3 != null">
+        title3,
+      </if>
+      <if test="minPrice != null">
+        min_price,
+      </if>
+      <if test="businessStartTime1 != null">
+        business_start_time1,
+      </if>
+      <if test="businessEndTime1 != null">
+        business_end_time1,
+      </if>
+      <if test="businessStartTime2 != null">
+        business_start_time2,
+      </if>
+      <if test="businessEndTime2 != null">
+        business_end_time2,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="doorImg != null">
+        door_img,
+      </if>
+      <if test="interiorImg != null">
+        interior_img,
+      </if>
+      <if test="businessType != null">
+        business_type,
+      </if>
+      <if test="takeawayPhone != null">
+        takeaway_phone,
+      </if>
+      <if test="isPlatSend != null">
+        is_plat_send,
+      </if>
+      <if test="cardUserImg != null">
+        card_user_img,
+      </if>
+      <if test="cardGuohuiImg != null">
+        card_guohui_img,
+      </if>
+      <if test="cardHandImg != null">
+        card_hand_img,
+      </if>
+      <if test="businessLicenseImg != null">
+        business_license_img,
+      </if>
+      <if test="securityPermitImg != null">
+        security_permit_img,
+      </if>
+      <if test="otherVoucherImg != null">
+        other_voucher_img,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="maxDeliveryArea != null">
+        max_delivery_area,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+      <if test="merchantId != null">
+        #{merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=CHAR},
+      </if>
+      <if test="shopName != null">
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLogo != null">
+        #{shopLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="shopDetail != null">
+        #{shopDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null">
+        #{contactName,jdbcType=CHAR},
+      </if>
+      <if test="pcd != null">
+        #{pcd,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null">
+        #{lng,jdbcType=DOUBLE},
+      </if>
+      <if test="lat != null">
+        #{lat,jdbcType=DOUBLE},
+      </if>
+      <if test="isOpen != null">
+        #{isOpen,jdbcType=BOOLEAN},
+      </if>
+      <if test="approvalStatus != null">
+        #{approvalStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="street != null">
+        #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="title1 != null">
+        #{title1,jdbcType=VARCHAR},
+      </if>
+      <if test="title2 != null">
+        #{title2,jdbcType=VARCHAR},
+      </if>
+      <if test="title3 != null">
+        #{title3,jdbcType=VARCHAR},
+      </if>
+      <if test="minPrice != null">
+        #{minPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="businessStartTime1 != null">
+        #{businessStartTime1,jdbcType=TIME},
+      </if>
+      <if test="businessEndTime1 != null">
+        #{businessEndTime1,jdbcType=TIME},
+      </if>
+      <if test="businessStartTime2 != null">
+        #{businessStartTime2,jdbcType=TIME},
+      </if>
+      <if test="businessEndTime2 != null">
+        #{businessEndTime2,jdbcType=TIME},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="doorImg != null">
+        #{doorImg,jdbcType=VARCHAR},
+      </if>
+      <if test="interiorImg != null">
+        #{interiorImg,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null">
+        #{businessType,jdbcType=INTEGER},
+      </if>
+      <if test="takeawayPhone != null">
+        #{takeawayPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="isPlatSend != null">
+        #{isPlatSend,jdbcType=BOOLEAN},
+      </if>
+      <if test="cardUserImg != null">
+        #{cardUserImg,jdbcType=VARCHAR},
+      </if>
+      <if test="cardGuohuiImg != null">
+        #{cardGuohuiImg,jdbcType=VARCHAR},
+      </if>
+      <if test="cardHandImg != null">
+        #{cardHandImg,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseImg != null">
+        #{businessLicenseImg,jdbcType=VARCHAR},
+      </if>
+      <if test="securityPermitImg != null">
+        #{securityPermitImg,jdbcType=VARCHAR},
+      </if>
+      <if test="otherVoucherImg != null">
+        #{otherVoucherImg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maxDeliveryArea != null">
+        #{maxDeliveryArea,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+
+
+
+
+
+
+
+  <select id="selectByMerchantUserId" resultType="com.hl.shangou.pojo.entity.Merchant">
+    select <include refid="Base_Column_List"/>
+    from
+    merchant
+    where
+    user_id = #{userId}
+  </select>
+
+
+    <select id="ajaxList" resultType="com.hl.shangou.pojo.entity.Merchant">
+      select <include refid="Base_Column_List"/>
+      from
+      merchant
+      <where>
+        <if test="phone != null and phone !=''">
+          and phone like CONCAT('%',#{phone},'%')
+        </if>
+        <if test="shopName != null and shopName !=''">
+          and shop_name like CONCAT('%',#{shopName},'%')
+        </if>
+        <if test="shopDetail != null and shopDetail !=''">
+          and shop_detail like CONCAT('%',#{shopDetail},'%')
+        </if>
+        <if test="email != null and email !=''">
+          and email like CONCAT('%',#{email},'%')
+        </if>
+        <if test="contactName != null and contactName!=''">
+          and contact_name like CONCAT('%',#{contactName},'%')
+        </if>
+        <if test="pcd != null and pcd != ''">
+          and pcd like CONCAT('%',#{pcd},'%')
+        </if>
+        <if test="address != null and address!=''">
+          and address like CONCAT('%',#{address},'%')
+        </if>
+        <if test="location != null and location !=''">
+          and `location` like CONCAT('%',#{location},'%')
+        </if>
+        <if test="isOpen != null">
+          is_open = #{isOpen},
+        </if>
+        <if test="approvalStatus != null and approvalStatus !=''">
+          and approval_status like CONCAT('%',#{approvalStatus},'%')
+        </if>
+        <if test="street != null and street != ''">
+          and street like CONCAT('%',#{street},'%')
+        </if>
+        <if test="title1 != null and title1 !=''">
+          and title1 like CONCAT('%',#{title1},'%')
+        </if>
+        <if test="title2 != null and title2 !=''">
+          and title2 like CONCAT('%',#{title2},'%')
+        </if>
+        <if test="title3 != null and title3!=''">
+          and title3 like CONCAT('%',#{title3},'%')
+        </if>
+
+        <if test="province != null and province!=''">
+          and province like CONCAT('%',#{province},'%')
+        </if>
+        <if test="businessType != null and businessType!=''">
+          and business_type like CONCAT('%',#{businessType},'%')
+        </if>
+        <if test="takeawayPhone != null and takeawayPhone!=''">
+          and business_type like CONCAT('%',#{businessType},'%')
+        </if>
+      </where>
+      limit #{start},#{limit}
+    </select>
+  <select id="ajaxSelectCount" resultType="java.lang.Integer">
+    select count(*)
+    from
+    merchant
+    <where>
+      <if test="phone != null and phone !=''">
+        and phone like CONCAT('%',#{phone},'%')
+      </if>
+      <if test="shopName != null and shopName !=''">
+        and shop_name like CONCAT('%',#{shopName},'%')
+      </if>
+      <if test="shopDetail != null and shopDetail !=''">
+        and shop_detail like CONCAT('%',#{shopDetail},'%')
+      </if>
+      <if test="email != null and email !=''">
+        and email like CONCAT('%',#{email},'%')
+      </if>
+      <if test="contactName != null and contactName!=''">
+        and contact_name like CONCAT('%',#{contactName},'%')
+      </if>
+      <if test="pcd != null and pcd != ''">
+        and pcd like CONCAT('%',#{pcd},'%')
+      </if>
+      <if test="address != null and address!=''">
+        and address like CONCAT('%',#{address},'%')
+      </if>
+      <if test="location != null and location !=''">
+        and `location` like CONCAT('%',#{location},'%')
+      </if>
+      <if test="isOpen != null">
+        is_open = #{isOpen},
+      </if>
+      <if test="approvalStatus != null and approvalStatus !=''">
+        and approval_status like CONCAT('%',#{approvalStatus},'%')
+      </if>
+      <if test="street != null and street != ''">
+        and street like CONCAT('%',#{street},'%')
+      </if>
+      <if test="title1 != null and title1 !=''">
+        and title1 like CONCAT('%',#{title1},'%')
+      </if>
+      <if test="title2 != null and title2 !=''">
+        and title2 like CONCAT('%',#{title2},'%')
+      </if>
+      <if test="title3 != null and title3!=''">
+        and title3 like CONCAT('%',#{title3},'%')
+      </if>
+
+      <if test="province != null and province!=''">
+        and province like CONCAT('%',#{province},'%')
+      </if>
+      <if test="businessType != null and businessType!=''">
+        and business_type like CONCAT('%',#{businessType},'%')
+      </if>
+      <if test="takeawayPhone != null and takeawayPhone!=''">
+        and business_type like CONCAT('%',#{businessType},'%')
+      </if>
+    </where>
+  </select>
+
+
 </mapper>

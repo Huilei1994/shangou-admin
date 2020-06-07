@@ -95,7 +95,6 @@ public class RoleServiceImpl implements RoleService {
     public ResponseDTO ajaxAddPermissions(List<RoleVO> roleVOS,List<PermissionVO> permissionVOS) {
 
         StringBuffer permissionIdsStr = new StringBuffer();
-
         TreeSet<Integer> integers = new TreeSet<>();
         for (PermissionVO permissionVO : permissionVOS) {
             Integer permissionId = permissionVO.getPermissionId();
@@ -126,10 +125,7 @@ public class RoleServiceImpl implements RoleService {
             for (String s : sortAndRepeatStr) {
                 permissionIdsStr.append(",");
                 permissionIdsStr.append(s);
-
             }
-
-
             //去掉前后的逗号
             permissions=permissionIdsStr.toString();
             if (permissions.startsWith(",")) {

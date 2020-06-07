@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(value = AuthorizationException.class)
     String handUnAuthException(Exception e, Model model) {
         model.addAttribute("errorMsg", e.getMessage());

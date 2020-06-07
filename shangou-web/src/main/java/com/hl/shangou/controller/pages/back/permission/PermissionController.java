@@ -41,7 +41,6 @@ public class PermissionController {
     @RequestMapping("ajaxList")
     @ResponseBody
     PageDTO ajaxList(PermissionQuery query) {
-
         return permissionService.ajaxList(query);
     }
 
@@ -73,8 +72,6 @@ public class PermissionController {
 
         return responseDTO ;
     }
-
-
 
 
     @RequestMapping("ajaxSelectPermissions")

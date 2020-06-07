@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
+import java.io.File;
 
 /**
  * creator：Administrator
@@ -24,6 +25,8 @@ import javax.annotation.Resource;
 public class WebMvcConfig implements WebMvcConfigurer {
     @Resource
     ShangouInterceptor shangouInterceptor;
+
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -96,5 +99,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
         }
         return realPath;
     }
+
+    /**
+     * 删除服务器下的缓存图片
+     * @param imgUrl
+     * @return
+     */
+    public static boolean deleteFile(String imgUrl) {
+        File file = new File(getUploadPath() + imgUrl);
+        return file.delete();
+    }
+
 
 }

@@ -8,5 +8,5 @@ import lombok.Data;
  */
 @Data
 public class UserQuery extends com.hl.shangou.pojo.query.PageQuery {
-    private String password, phone;
+    private String password, phone,nickName,realName,note;
 }

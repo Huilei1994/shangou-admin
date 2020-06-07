@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * user
- * @author
+ * @author 
  */
 @Data
 public class User implements Serializable {
@@ -55,6 +55,11 @@ public class User implements Serializable {
      * 角色组
      */
     private String roles;
+
+    /**
+     * 备注
+     */
+    private String note;
 
     private static final long serialVersionUID = 1L;
 }

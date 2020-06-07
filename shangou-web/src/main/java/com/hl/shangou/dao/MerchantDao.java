@@ -1,6 +1,10 @@
 package com.hl.shangou.dao;
 
 import com.hl.shangou.pojo.entity.Merchant;
+import com.hl.shangou.pojo.query.MerchantQuery;
+import com.hl.shangou.pojo.vo.MerchantVO;
+
+import java.util.List;
 
 public interface MerchantDao {
     int deleteByPrimaryKey(Long merchantId);
@@ -14,4 +18,12 @@ public interface MerchantDao {
     int updateByPrimaryKeySelective(Merchant record);
 
     int updateByPrimaryKey(Merchant record);
+
+    int ajaxAddMerchant(MerchantVO merchantVO);
+
+    Merchant selectByMerchantUserId(Long userId);
+
+    List<Merchant> ajaxList(MerchantQuery query);
+
+    int ajaxSelectCount(MerchantQuery query);
 }

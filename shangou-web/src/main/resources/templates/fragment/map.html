@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="map" >
+    <script type="text/javascript"
+            src="https://webapi.amap.com/maps?v=2.0&key=4ef33553bc26e63d127b878325234f2f"></script>
+    <div class="layui-row" id="mapDiv"
+         style="position: absolute;height: 100%;width: 100%;background: rgba(0,0,0,0.3);display: none;z-index: 999;">
+        <div id="mapShadow" style="position: absolute;left: 0;right: 0;top: 0;bottom: 0">
+        </div>
+        <div class="layui-col-xs12 layui-col-sm6 layui-col-md-offset3 layui-col-sm-offset3" style="height: 100%;">
+            <div style="background: white;height: 100%;display: flex;flex-direction: column">
+                <div style="padding: 10px">
+                    <input class="layui-input" id="searchPlace" type="text" placeholder="地点搜索"/>
+                </div>
+                <div id="mapContainer" style="height: 300px"></div>
+                <div style="padding: 10px;flex: 1;overflow-y: auto" id="addressListDiv">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript" type="text/javascript">
+        let placeSearch;
+        let autoComplete;
+        let nearby = [];
+        let lnglat;
+        let currentInput;
+        let map;
+        $(function () {
+            map = new AMap.Map('mapContainer', {// 创建一个map对象
+                zoom: 18,
+            });
+            AMap.plugin(['AMap.AutoComplete', 'AMap.PlaceSearch'], function () {// 增加地图插件
+                // 实例化Autocomplete
+                placeSearch = new AMap.PlaceSearch({ //构造地点查询类
+                    pageSize: 10,// 分页行数
+                    pageIndex: 1,
+                    // city: this.currentCity[1], //城市
+                    // map: map,
+                    type: "小区|大厦|宾馆|楼",
+                    // citylimit: true,
+                    // extensions: "all",
+                    // panel: "panel"
+                });
+                autoComplete = new AMap.AutoComplete({
+                    // input 为绑定输入提示功能的input的DOM ID
+                    input: 'searchPlace'
+                });
+                // 无需再手动执行search方法，autoComplete会根据传入input对应的DOM动态触发search
+                autoComplete.on('select', function (a) {
+                    console.log(a);// 凡是无非就两种：要么就是js对象，要么就是函数，要么数组
+                    let l = a.poi.location;// 经纬度对象  Lnglat
+                    if (l != undefined) {
+                        lnglat = l;
+                        map.clearMap();// 清空地图上的覆盖物
+                        map.setCenter(l);// 把地图是视角移动到你定义的那个经纬度去
+                        let marker = new AMap.Marker({// 创建一个点标记
+                            position: l
+                        });
+                        map.add(marker);
+                    }
+                });
+            });
+            map.on('moveend', function () {// 地图在移动的时候
+                let LngLat = map.getCenter();
+                //附近查询
+                placeSearch.searchNearBy('', lnglat, 500, (a, b) => {
+                    if (a == 'no_data') {
+                        nearby = [];
+                    }
+                    if (a == 'complete') {
+                        let data = b.poiList.pois;// 附近的对象赋值给提前定义好的数组对象
+                        nearby = data;// [{},{},{},{}]
+                        renderAddressList(nearby)
+                    }
+                })
+            });
+            $("input[mapPicker]").click(function () {
+                currentInput = $(this);
+                toggleMap();
+            });
+            $("#mapShadow").click(function () {
+                toggleMap();
+            });
+
+        });
+
+        function toggleMap(lng, lat) {// 这个函数就是触发map展示或者隐藏
+            if (lng,lat != undefined) {// 传递了经纬度
+                lnglat = new AMap.LngLat(lng, lat);
+                map.clearMap();// 清空地图上的覆盖物
+                map.setCenter(lnglat);// 把地图是视角移动到你定义的那个经纬度去
+                let marker = new AMap.Marker({// 创建一个点标记
+                    position: lnglat
+                });
+                map.add(marker);
+            }
+            let s = $("#mapDiv").css("display");
+            if ('block' == s) {
+                $("#mapDiv").css({display: 'none'});
+            } else {
+                $("#mapDiv").css({display: 'block'});
+            }
+        }
+
+        function renderAddressList(list) {
+            let addressListDiv = $("#addressListDiv");
+            addressListDiv.empty();
+            list.forEach((i, index) => {
+                let show = index == 0 ? '' : 'none';
+                let item = $("<div style=\"border-bottom: lightgray solid 1px;cursor: pointer\" >\n" +
+                    "                        <div style=\"padding: 5px 0\">" +
+                    "<span  style=\"padding: 2px 5px;background: red;color: white;border-radius: 2px;display: " + show + "\">当前</span>" + i.name + "</div>\n" +
+                    "                        <div style=\"color: gray;padding: 5px 0\">" + i.address + "</div>\n" +
+                    "                    </div>");
+                item.click(function () {
+                    if (currentInput != undefined) {
+                        currentInput[0].lng = i.location.lng;
+                        currentInput[0].lat = i.location.lat;
+                        currentInput.val(i.address + " " + i.name);
+                        currentInput.nextAll().remove();
+                        let lngInput = $("<input type='hidden' name='lng' value='" + i.location.lng + "'>")
+                        let latInput = $("<input type='hidden' name='lat' value='" + i.location.lat + "'>")
+                        currentInput.after(lngInput);
+                        currentInput.after(latInput);
+                    }
+                    $("#searchPlace").val(i.name);
+                    toggleMap();
+                });
+                addressListDiv.append(item);
+            })
+        }
+    </script>
+</div>
+</html>

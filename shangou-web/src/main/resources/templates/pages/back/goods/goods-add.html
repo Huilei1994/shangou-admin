@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .loginType:hover {
+        color: orange;
+    }
+    .w-e-text-container{
+        height: 400px!important;/*!important是重点，因为原div是行内样式设置的高度300px*/
+    }
+</style>
+<div th:replace="fragment/js::js"></div>
+<div th:replace="fragment/map::map"></div>
+
+<script type="text/javascript" th:src="@{/hl/cityPiker/cityPiker.js}"></script>
+<script type="text/javascript" th:src="@{/hl/upload/upload.js}"></script>
+<body style="margin: 0;background: rgb(245,245,245)">
+<div>
+
+    <div style="background: orange;height: 60px;display: flex;justify-content: center;padding-bottom: 10px">
+        <div class="sg-container" style="display: flex;justify-content: space-between;align-items: flex-end ">
+            <div>
+                <div style="font-size: 32px;font-weight: bold;color: white">添加商品界面</div>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex;justify-content: center;">
+        <form class="layui-form"  lay-filter="addForm" style="padding: 20px 10px">
+            <label class="layui-form-label" style="width: 8%;font-size: 25px"><b>基本信息</b></label>
+            <hr class="layui-bg-orange">
+            <div style="display: flex ;flex-wrap: wrap">
+                    <!--<div class="layui-form-item">
+                        <label class="layui-form-label">商家ID</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="merchantId" placeholder="请输入商家ID"
+                                   lay-verify="required"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>-->
+                <!--<div class="layui-form-item">
+                        <label class="layui-form-label">商家ID</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="merchantId" placeholder="请输入商家ID"
+                                   lay-verify="required"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品类型ID</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="goodsTypeId"  placeholder="请输入商品类型ID"
+                                   lay-verify="required|number"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">经营类型ID(主要类型)</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="businessTypeId" placeholder="请输入经营类型ID"
+                                   lay-verify="required|number"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" placeholder="请输入商品名"
+                                   lay-verify="required"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">原价</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="oldPrice" placeholder="请输入商品名"
+                                   lay-verify="required|number"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">现价</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="nowPrice" placeholder="请输入现价"
+                                   lay-verify="required|number"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">库存</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="stock" placeholder="请输入库存"
+                                   lay-verify="required|number"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品副标题</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="subTitle" placeholder="请输入副标题"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">包装费</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="packagingFee" placeholder="请输入包装费"
+                                   lay-verify="number"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">省份</label>
+                        <div class="layui-input-block">
+                            <input type="text" required name="province" placeholder="请输入省份"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">排序编号</label>
+                        <div class="layui-input-block">
+                            <input type="text" required name="sort"   placeholder="请输入排序编号"
+                                   lay-verify="number"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">重量</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="weight"   placeholder="请输入重量"
+                                   lay-verify="number"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">口味</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="taste"  placeholder="请输入口味"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">售出</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="sold"  placeholder="请输入售出"
+                                   lay-verify="number"
+                                   style="width: 200px" class="layui-input">
+                        </div>
+                    </div>
+            </div>
+            <hr class="layui-bg-orange">
+            <label class="layui-form-label" style="width: 8%;font-size: 25px"><b>商品图片</b></label>
+            <hr class="layui-bg-orange">
+            <div style="display: flex ;flex-wrap: wrap">
+                <div style="margin-left: 20px">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品的主图</label>
+                        <div class="layui-input-block">
+                            <div lh-upload id="pic"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div style="margin-left: 20px">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品详情页面的轮播图</label>
+                        <div class="layui-input-block">
+                            <div lh-upload id="imgs"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="layui-bg-orange">
+            <label class="layui-form-label" style="width: 8%;font-size: 25px"><b>基本选择</b></label>
+            <hr class="layui-bg-orange">
+            <div style="display: flex ;flex-wrap: wrap">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">在售</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="onSale" checked="true" lay-skin="switch">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">能否外卖</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="takeaway" checked="true" lay-skin="switch">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">是否是团购</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="isCoupon" checked="true" lay-skin="switch">
+                    </div>
+                </div>
+            </div>
+            <hr class="layui-bg-orange">
+            <label class="layui-form-label" style="width: 8%;font-size: 25px"><b>详细信息</b></label>
+            <hr class="layui-bg-orange">
+            <div>
+                    <div class="layui-input-block">
+                        <div id="wangEditor" style="width: 90%;height: 450px" class="wangEditor" >
+                            <span>请在这里填入商品的详细信息</span>
+                        </div>
+                    </div>
+            </div>
+            <input type="text" name="detail" id="detail" hidden>
+            <div style="text-align: center">
+                <button class="layui-btn " id="commit" lay-submit lay-filter="commit" style="background-color: orange;width: 250px">立即添加</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<!--wnagEditJS-->
+<script th:inline="javascript" type="text/javascript">
+    let isClear = true;
+    let E = window.wangEditor
+    let editor = new E('#wangEditor')
+
+    //相关配置
+    editor.customConfig.uploadImgServer = '/pages/back/upload/editUploadFiles'
+    // 将图片大小限制为 3M
+    editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024;
+    // 自定义上传参数
+    editor.customConfig.uploadFileName = 'file';
+    // 限制一次最多上传 5 张图片
+    editor.customConfig.uploadImgMaxLength = 5;
+    editor.customConfig.uploadImgHooks = {
+        // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
+        // （但是，服务器端返回的必须是一个 JSON 格式字符串！！！否则会报错）
+        customInsert : function(insertImg, result, editor) {
+            // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
+            // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
+            // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
+            var url = result.url
+            insertImg(url)
+            // result 必须是一个 JSON 格式字符串！！！否则报错
+        }
+    }
+    // 必须放到有关于编辑器设置前面
+
+    //创建编辑器
+    editor.create();
+
+    //首次点击清空里面内容
+    $("#wangEditor").click(function () {
+        if (isClear) {
+            editor.txt.clear();
+        }
+        isClear = false;
+    });
+
+    //这是富文本的信息 需要把这个值赋予给detail
+    //alert(editor.txt.html())
+    $("#commit").click(function () {
+        if (!isClear){
+            $("#detail").val(editor.txt.html())
+        }
+    });
+</script>
+
+<!--layui-->
+<script th:inline="javascript" type="text/javascript">
+    $(function () {
+        // 这些图片都是必须要上传的
+        let validateArr = ['pic'];
+        layui.use(['layer', 'form'], function () {
+            let layer = layui.layer;
+            let form = layui.form;
+
+            form.on('submit(commit)', function (data) {
+                /*console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回*/
+                let flag = true;// 默认是通过
+                for (let x = 0; x < validateArr.length; x++) {
+                    let i = validateArr[x];
+                    if (data.field[i] == undefined || data.field[i] == '') {
+                        layer.msg($("#" + i).parent().prev().text() + "需要上传");
+                        flag = false;// 有一个没上传就不能通过
+                        break;
+                    }
+                }
+                if (!flag) {// 如果上传文件没用通过，那么久直接返回false,就不要继续后面的操作了
+                    return false;
+                }
+                // 验证通过，开始执行入驻申请，因为图片全部都已经转换成了地址的字符串，所以实际上这里已经不涉及图片上传了，那么可以使用简单的post请求即可
+                console.log(data.field);
+                let data1 = form.val("addForm");
+                console.log(data1);
+
+                $.post('/pages/back/goods/ajaxAdd', data.field, function (res) {
+                    if (res.res) {//
+                        layer.msg("添加成功");
+                        window.location='/pages/back/goods/list'
+                    }
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+            uploadFile();// 一定要
+        });
+    })
+</script>
+
+
+</body>
+</html>

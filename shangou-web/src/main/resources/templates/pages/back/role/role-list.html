@@ -16,7 +16,7 @@
 <div>
 
     <div style="margin-top: 20px;margin-left: 50px">
-        <form class="layui-form" method="post" style="display: flex">
+        <form class="layui-form" id="searchForm" method="post" style="display: flex">
 
             <div class="layui-form-item form-inline">
                 <label class="layui-form-label">角色名称:</label>
@@ -552,7 +552,6 @@
         let isChecked;
         let roleData;
         form.on('submit(addPermissions)', function (data) {
-
             if (isChecked==true) {
                 layer.open({
                     type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
@@ -580,8 +579,6 @@
                             layer.msg("请选择权限");
                             return false;
                         }
-
-
 
                         $.ajax({
                             url: "/pages/back/role/ajaxAddPermissions",// 请求数据服务器地址，只能是当前项目，JSONP才能访问外网（需要服务器配合才能用）
@@ -627,16 +624,22 @@
             console.log(obj.checked); //当前是否选中状态
             console.log(obj.data); //选中行的相关数据
             console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
-
             isChecked = obj.checked;
             console.log(table.checkStatus('roleTable').data); // 获取表格中选中行的数据
             roleData = table.checkStatus('roleTable').data;
 
         });
 
+        onInput($("#searchForm input"));
+
     });
-
-
+    function onInput(jObj) {
+        jObj.on({
+            'input': function () {
+                $("#selectByInfo").click();// 这里直接换成查询按钮点击事件
+            }
+        })
+    }
 </script>
 
 </body>

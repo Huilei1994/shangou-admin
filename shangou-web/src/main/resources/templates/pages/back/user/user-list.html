@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div th:replace="fragment/js::js"></div>
+
+<body>
+
+<table id="userTable" lay-filter="userTable"></table>
+
+<script type="text/html" id="editForm">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <input type="text" name="userId" id="userId" hidden>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户昵称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="nickName" id="nickName" required placeholder="请输入用户昵称" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">真名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="realName" id="realName" placeholder="请输入真名" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="password"  id="password" required placeholder="请输入密码" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-block">
+                    <input type="text" name="phone" id="phone" placeholder="请输入电话" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-block">
+                    <input type="text" name="email" id="email" placeholder="请输入邮箱" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+            <!--<div class="layui-form-item">
+                <label class="layui-form-label">上次登录ip</label>
+                <div class="layui-input-block">
+                    <input type="text" name="lastLoginIp" id="lastLoginIp" placeholder="请输入上次登录ip" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>-->
+
+            <!--<div class="layui-form-item">
+                <label class="layui-form-label">上次登录日期</label>
+                <div class="layui-input-block">
+                    <input type="text" name="lastLoginTime" id="lastLoginTime" placeholder="请输入上次登录日期" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <input type="text" name="note" id="note" placeholder="请输入备注" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="editForm">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+
+<script type="text/html" id="addForm">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" required placeholder="请输入用户名" autocomplete="off"
+                       style="width: 160px"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="nickName" required placeholder="请输入用户昵称" autocomplete="off"
+                       style="width: 160px"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">真名</label>
+            <div class="layui-input-block">
+                <input type="text" name="realName" placeholder="请输入真名" autocomplete="off"
+                       style="width: 160px"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="text" name="password" required placeholder="请输入密码" autocomplete="off"
+                       style="width: 160px"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" placeholder="请输入电话" autocomplete="off"
+                       style="width: 160px"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="email" placeholder="请输入邮箱" autocomplete="off"
+                       style="width: 160px"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item">
+            <label class="layui-form-label">上次登录ip</label>
+            <div class="layui-input-block">
+                <input type="text" name="lastLoginIp" placeholder="请输入上次登录ip" autocomplete="off"
+                       style="width: 160px"
+                       class="layui-input">
+            </div>
+        </div>-->
+
+        <!--<div class="layui-form-item">
+            <label class="layui-form-label">上次登录日期</label>
+            <div class="layui-input-block">
+                <input type="text" name="lastLoginTime" placeholder="请输入上次登录日期" autocomplete="off"
+                       style="width: 160px"
+                       class="layui-input">
+            </div>
+        </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="note" placeholder="请输入备注" autocomplete="off"
+                       style="width: 160px"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="commit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</script>
+
+
+<script type="text/html" id="toolbarDemo">
+    <a class="layui-btn" lay-event="add"><i class="layui-icon layui-icon-addition"></i>添加用户</a>
+    <a class="layui-btn" lay-event="AssignRoles"><i class="layui-icon layui-icon-group"></i>添加角色</a>
+    <a class="layui-btn layui-btn-danger" lay-event="delete"><i class="layui-icon layui-icon-subtraction"></i>删除用户</a>
+</script>
+
+<script th:inline="javascript" type="text/javascript">
+
+
+    layui.use(['layer', 'laydate', 'laypage', 'table', 'form'], function () {
+        let layer = layui.layer;// 弹出层
+        let laydate = layui.laydate;// 日期组件
+        let laypage = layui.laypage;// 分页组件
+        let table = layui.table;// 分页组件
+        let form = layui.form;// 分页组件
+
+
+        let $ = layui.$;// 使用jquery
+        // layer.msg('弹出一个消息', {icon: 1});
+
+        //第一个实例
+        let tb = table.render({// 渲染表格
+            elem: '#userTable'
+            , url: '/pages/back/user/ajaxUserList' //服务后台的数据接口
+            , page: true //开启分页
+            , cols: [[ //表头，这里是两个[[开头，两个]]结尾
+                {field: '', type: 'checkbox', title: '多选'}
+                , {
+                    field: '', title: '操作', templet: function (d) {// 这个d指的是本行的数据 js对象
+                        return '<div>\n' +
+                            '            <button class="layui-btn layui-btn-xs" lay-event="updateData">修改</button>\n' +
+                            '            <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deleteData">删除</button>\n' +
+                            ' </div>'
+                    }
+                }
+                , {field: 'userId', title: '用户ID', sort: true}
+                , {field: 'nickName', title: '昵称'}
+                , {field: 'realName', title: '真名'}
+                , {field: 'password', title: '密码'}
+                , {field: 'phone', title: '电话'}
+                , {field: 'email', title: '邮箱'}
+                , {field: 'lastLoginIp', title: '上次登录ip'}
+                , {field: 'lastLoginTime', title: '上次登录日期'}
+                , {field: 'roles', title: '角色组'}
+                , {field: 'note', title: '备注'}
+            ]]
+            , toolbar: '#toolbarDemo'
+        });
+
+        form.on('submit(commit)', function (data) {
+            console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+            $.post('/pages/back/user/ajaxAddUser'
+                , data.field
+                , function (res) {
+                    if (res.res) {
+                        layer.msg("添加成功")
+                        layer.closeAll()
+                    }
+                });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        form.on('submit(editForm)', function (data) {
+           //console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+           // console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+            $.post('/pages/back/user/ajaxEditUser'
+                , data.field
+                , function (res) {
+                    if (res.res) {
+                        layer.msg("修改成功")
+                        layer.closeAll()
+                        tb.reload();
+                    }
+                });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        //监听工具条
+        table.on('tool(userTable)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            console.log(obj)
+            if (layEvent === 'updateData') {
+                console.log(data)
+                console.log(layEvent)
+                addOpen = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
+                    type: 1,
+                    area: ['350px', '500px'],
+                    shadeClose: true,
+                    title: "用户修改",
+                    content: $("#editForm").html()
+                });
+
+                $("#userId").val(data.userId)
+                $("#nickName").val(data.nickName)
+                $("#realName").val(data.realName)
+                $("#password").val(data.password)
+                $("#phone").val(data.phone)
+                $("#email").val(data.email)
+                $("#note").val(data.note)
+
+
+
+            } else if (layEvent === 'deleteData') { //删除
+                layer.confirm('真的删除么', function (index) {
+                    console.log(layEvent)
+                    $.post('/pages/back/user/ajaxDeleteUser'
+                        , {userId:data.userId}
+                        , function (res) {
+                            if (res.res) {
+                                layer.msg("删除成功")
+                                tb.reload();
+                            }
+                        });
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+                    //向服务端发送删除指令
+                });
+            }
+
+        });
+
+        table.on('edit(userTable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+            console.log(obj.value); //得到修改后的值
+            console.log(obj.field); //当前编辑的字段名
+            console.log(obj.data); //所在行的所有相关数据
+        });
+
+        let addOpen;
+        // 工具栏监听事件监听事件
+        table.on('toolbar(userTable)', function (obj) {
+            console.log(obj);
+            switch (obj.event) {
+                case 'add':
+                    layer.msg('添加');
+                    addOpen = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
+                        type: 1,
+                        area: ['350px', '500px'],
+                        shadeClose: true,
+                        title: "用户添加",
+                        content: $("#addForm").html()
+                    });
+                    break;
+                case 'AssignRoles':
+                    let users = checkStatus;
+                    if (isChecked==true){
+                        layer.open({
+                            type: 2//0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层)
+                            , title: "添加角色" //不显示标题栏
+                            , closeBtn: false
+                            , area: ['1000px', '600px']//定义宽高
+                            , shade: 0.8//遮幕
+                            , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                            , btn: ['确定', '取消']
+                            , btnAlign: 'c'//按钮排列：居中对齐
+                            , moveType: 1 //拖拽模式，0或者1
+                            , content: '/pages/back/user/rolesList'//跳转到想要的界面，这里是我自己项目的跳转界面
+                            , success: function (layero, index) {
+
+                            },
+                            yes: function (index, layero) {         //按了弹出层的确定按钮时，这是将在父窗口中获取子窗口form标签里的所有值，并根据name名和值形成键值对json对象
+                                let iframe = window['layui-layer-iframe'+index];
+                                let roleData=iframe.layui.test();
+                                console.log(roleData);
+                                console.log(users);
+                                if (roleData[0]==null){
+                                    layer.msg("请选择角色");
+                                    return false;
+                                }
+                                $.ajax({
+                                    url: "/pages/back/user/ajaxAddRoles",// 请求数据服务器地址，只能是当前项目，JSONP才能访问外网（需要服务器配合才能用）
+                                    contentType:'application/json;charset=utf-8',// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
+                                    // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
+                                    //data: JSON.stringify(permissionData),// 要上传的参数
+                                    data: JSON.stringify({"userVOS":users,"roleVOS":roleData}),// 要上传的参数
+                                    dataType: 'json',// 服务器响应数据：json,text,html,xml
+                                    error: function () {//请求错误的时候，会触发此函数
+
+                                    },
+                                    processData: false,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
+                                    success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
+                                        console.log(res);
+                                        if (res.status == 200) {
+                                            layer.msg("添加成功");
+                                            tb.reload();
+                                        }
+                                    },
+                                    type: 'post',// ajax请求的方式，post或get
+                                });
+                                layer.closeAll();
+
+
+                            }
+
+                        })
+                    }else {
+                        layer.msg('请选择角色');
+                    }
+
+                    break;
+                case 'delete':
+                    if (isChecked==true){
+                        let ids;
+                        checkStatus.forEach(function (value) {
+                            ids += value.userId + ',';
+                        })
+                        layer.confirm('真的删除么', function (index) {
+                            $.post('/pages/back/user/ajaxDeleteUsers'
+                                , {userIds:ids}
+                                , function (res) {
+                                    if (res.res) {
+                                        layer.msg("删除成功")
+                                        tb.reload();
+                                    }
+                                });
+                            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                            obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                            layer.close(index);
+                            //向服务端发送删除指令
+                        });
+                    }else {
+                        layer.msg('请选择需要删除用户');
+                    }
+                    break;
+            };
+        });
+        var checkStatus;
+        var isChecked;
+        table.on('checkbox(userTable)', function (obj) {
+            console.log(obj); //当前是否选中状态
+            console.log(obj.checked); //当前是否选中状态
+            console.log(obj.data); //选中行的相关数据
+            console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
+            isChecked = obj.checked;
+            checkStatus = layui.table.checkStatus('userTable').data;
+            console.log(checkStatus);
+        });
+
+    });
+
+
+</script>
+
+<style>
+    .testCls {
+        color: red;
+    }
+</style>
+</body>
+
+</html>
