@@ -5,11 +5,12 @@ import com.hl.shangou.pojo.dto.ResponseDTO;
 import com.hl.shangou.pojo.entity.Goods;
 import com.hl.shangou.pojo.query.GoodsQuery;
 import com.hl.shangou.pojo.vo.GoodsVO;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface GoodsService {
+public interface GoodsService extends BaseService{
 
     int deleteByPrimaryKey(Long goodsId);
 
@@ -28,8 +29,13 @@ public interface GoodsService {
 
     ResponseDTO ajaxDeleteGoods(Long goodsId);
 
-    @Transactional
+
+    @Transactional(propagation = Propagation.REQUIRED)
     ResponseDTO ajaxAdd(Goods goods);
 
+
+    @Transactional(propagation = Propagation.REQUIRED)
     ResponseDTO ajaxUpdateGoods(Goods goods);
+
+    PageDTO ajaxMerchantList(GoodsQuery query);
 }

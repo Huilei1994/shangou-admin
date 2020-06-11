@@ -1,6 +1,7 @@
 package com.hl.shangou.controller.pages.back.user;
 
 
+import com.hl.shangou.controller.BaseController;
 import com.hl.shangou.pojo.dto.PageDTO;
 import com.hl.shangou.pojo.dto.ResponseDTO;
 import com.hl.shangou.pojo.entity.User;
@@ -14,10 +15,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Base64;
 
 @Controller
 @RequestMapping("/pages/back/user")
-public class UserController {
+public class UserController extends BaseController {
 
     @Resource
     UserService userService;
@@ -42,10 +44,22 @@ public class UserController {
     }
 
 
+
+    //修改用户
     @RequestMapping("ajaxEditUser")
     @ResponseBody
     ResponseDTO ajaxEditUser(User user){
-        return  userService.ajaxEditUser(user);
+
+        ResponseDTO res = userService.ajaxEditUser(user);
+
+        if (getUserId().equals(user.getUserId())) {// 当前用户是修改的用户
+            User u = userService.selectByPrimaryKey(getUserId());
+            getSession().setAttribute("nickName", u.getNickName());
+            getSession().setAttribute("realName", u.getRealName());
+            getSession().setAttribute("photo", u.getPhoto());
+        }
+        return res;
+
     }
 
     @RequestMapping("ajaxDeleteUser")
@@ -66,6 +80,7 @@ public class UserController {
 
 
 
+
     @RequestMapping("ajaxAddRoles")
     @ResponseBody
     ResponseDTO ajaxAddRoles(@RequestBody UserAddRolesVO userAddRolesVO) {
@@ -73,9 +88,6 @@ public class UserController {
         if (userAddRolesVO == null) {
             return ResponseDTO.fail("没有数据");
         }
-
-
-
         return userService.ajaxAddRoles(userAddRolesVO);
     }
 

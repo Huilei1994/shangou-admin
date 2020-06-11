@@ -1,5 +1,6 @@
 package com.hl.shangou.service.impl;
 
+import com.hl.shangou.config.webmvc.WebMvcConfig;
 import com.hl.shangou.dao.PermissionDao;
 import com.hl.shangou.dao.RoleDao;
 import com.hl.shangou.dao.UserDao;
@@ -13,6 +14,7 @@ import com.hl.shangou.pojo.vo.UserAddRolesVO;
 import com.hl.shangou.pojo.vo.UserVO;
 import com.hl.shangou.service.UserService;
 import com.hl.shangou.util.Common.StringUtil;
+import com.hl.shangou.util.password.PasswordUtil;
 import com.sun.org.apache.xpath.internal.objects.XNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -37,6 +39,21 @@ public class UserServiceImpl implements UserService {
     @Resource
     PermissionDao permissionDao;
 
+
+    @Override
+    public User selectByPrimaryKey(Long userId) {
+        return userDao.selectByPrimaryKey(userId);
+    }
+
+    @Override
+    public int updateByPrimaryKeySelective(User record) {
+        return userDao.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public int updateByPrimaryKey(User record) {
+        return userDao.updateByPrimaryKey(record);
+    }
 
     @Override
     public UserVO login(UserQuery query) {
@@ -119,11 +136,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDTO ajaxEditUser(User user) {
-        int i = userDao.updateByPrimaryKeySelective(user);
-        if (i == 1) {
-            return ResponseDTO.ok("修改成功");
+        //与数据库的user做比较
+        User dbUser = userDao.selectByPrimaryKey(user.getUserId());
+
+        if (StringUtils.isEmpty(user.getPassword())) {
+            user.setPassword(null);
+        } else {
+            // 密码是不是应该需要加密
+            user.setPassword(PasswordUtil.encodePassword(user.getPassword()));
         }
-        return ResponseDTO.fail("修改失败");
+        if (userDao.updateByPrimaryKeySelective(user) == 1) {
+            //处理图片缓存信息
+            if (!StringUtils.isEmpty(dbUser.getPhoto())) {
+                if (dbUser.getPhoto().equals(user.getPhoto())) {
+
+                } else {
+                    deleteImgCache(user);// 删除现在的图片缓存
+                    if (!StringUtils.isEmpty(user.getPhoto())) {
+                        WebMvcConfig.deleteFile(dbUser.getPhoto());
+                    }
+                }
+            }
+            return ResponseDTO.ok("更新成功！", user);
+            // 这样做有问题？
+            // 但是如果用户本身就有图片呢？原来的图片的怎么办？？把原来的图片删除
+        }
+        return ResponseDTO.fail("更新失败！");
     }
 
     @Override

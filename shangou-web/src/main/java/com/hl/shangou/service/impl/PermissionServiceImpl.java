@@ -26,11 +26,8 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Resource
     PermissionDao permissionDao;
-
     @Resource
     UserService userService;
-
-
     @Resource
     RoleDao roleDao;
 

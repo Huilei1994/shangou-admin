@@ -6,7 +6,7 @@ import com.hl.shangou.pojo.vo.MerchantVO;
 import java.util.Date;
 import java.util.List;
 
-public interface ImgCacheService {
+public interface ImgCacheService extends BaseService{
 
     List<ImgCache> getAllImgCache(Date time);
 

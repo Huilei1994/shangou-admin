@@ -17,6 +17,8 @@
 </head>
 <div th:replace="fragment/js::js"></div>
 <link rel="stylesheet" th:href="@{/layui/css/home.css}" media="all">
+<script type="text/javascript" th:src="@{/hl/upload/upload.js}"></script>
+
 <body class="layui-layout-body">
 <div id="LAY_app">
     <div class="layui-layout layui-layout-admin">
@@ -38,14 +40,12 @@
                         <i class="layui-icon layui-icon-refresh-3"></i>
                     </a>
                 </li>
-
             </ul>
             <ul class="layui-nav layui-layout-right">
 
                 <li class="layui-nav-item">
                     <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
                         <i class="layui-icon layui-icon-notice" style="color:black"></i>
-
                         <!-- 如果有新消息，则显示小圆点 -->
                         <span class="layui-badge-dot"></span>
                     </a>
@@ -64,15 +64,16 @@
                 <li class="layui-nav-item">
                     <div style="display: flex;align-items: center">
 <!--                        <img th:src="${session.photo}" style="width: 30px;height: 30px;border-radius: 100%"/>-->
-                        <img th:src="@{/images/touxiang.jpg}" style="width: 30px;height: 30px;border-radius: 100%"/>
+                        <img showBig th:src="${session.photo}" style="width: 30px;height: 30px;border-radius: 100%"/>
                         <a href="javascript:;">
                             <cite th:text="${session.nickName}">用户名</cite>
                         </a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="set/user/info.html">基本资料</a></dd>
-                            <dd><a lay-href="set/user/password.html">修改密码</a></dd>
+                            <button class="layui-btn " id="editUserInfo">查看基本资料</button>
                             <hr>
-                            <dd layadmin-event="logout" style="text-align: center;"><a th:href="@{/logoutApp}">退出</a></dd>
+                            <dd layadmin-event="logout" style="text-align: center;">
+                                <a th:href="@{/logoutApp}">退出</a>
+                            </dd>
                         </dl>
                     </div>
                 </li>
@@ -85,7 +86,6 @@
                 </li>
             </ul>
         </div>
-
         <!-- 侧边菜单 -->
         <div class="layui-side layui-side-menu" id="leftMenuDiv">
             <div class="layui-side-scroll">
@@ -142,13 +142,104 @@
         <div class="layadmin-body-shade" id="shade"></div>
     </div>
 </div>
+<script type="text/html" id="editUserFormDiv">
+    <div style="padding: 20px">
+        <form class="layui-form">
+            <input type="hidden" name="userId" th:value="${session.userId}"/>
+            <div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">昵称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="nickName" th:value="${session.nickName}" required
+                               lay-verify="required"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">真名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="realName" th:value="${session.realName}" required
+                               lay-verify="required"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="password"  class="layui-input">
+                    </div>
+                </div>
+               <div class="layui-form-item">
+                    <label class="layui-form-label">头像</label>
+                    <div class="layui-input-block">
+                        <div lh-upload id="photo" th:value="${session.photo}"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <div style="padding: 10px 0">
+                            <button class="layui-btn " lay-submit lay-filter="userEditForm">修改</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+
 <script th:inline="javascript" type="text/javascript">
 
-    layui.use('element', function () {
-        var element = layui.element;
 
+
+    layui.use(['element', 'layer', 'form'], function () {
+        let layer = layui.layer;
+        let element = layui.element;
+        let form = layui.form;
         let $ = layui.$;
         let iframe = $("#layadmin-iframe");
+
+        $("#editUserInfo").click(function () {
+            layer.open({
+                type: 1,
+                title: '修改用户信息',
+                area: 'fit-content',
+                shadeClose: true,
+                content: $("#editUserFormDiv").html()
+            });
+            uploadFile({
+                dir: 'user',// 将这些图片保存到商品文件夹
+            });// 一定要
+        });
+
+        form.on('submit(userEditForm)', function (data) {
+            console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+           if (data.field.password!=undefined) {
+               if (data.field.password!=''){
+                   if(data.field.password.length < 6){
+                       layer.msg('密码太弱');
+                       return false;
+                   }
+               }
+            }
+            $.post('/pages/back/user/ajaxEditUser', data.field, function (res) {
+                layer.msg(res.msg);
+                setTimeout(function () {
+                    window.location.reload();
+                },2000)
+            })
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+
+
+
+
+
+
+
 
         $("[name=superMarketMenu]").click(function () {
             $(".layui-nav-child").css({
@@ -276,12 +367,20 @@
 
         })
     });
+
+
+
+
+
+
+
     $("#shade").click(function () {
         $("#leftMove").click();
     });
     $("#fullscreen").click(function () {
         toggleFullScreen();
     });
+
 
     /**
      * 切换全屏与否
@@ -310,7 +409,13 @@
                 document.webkitExitFullscreen();
             }
         }
+
     }
+
+
+
+
+
 
 </script>
 

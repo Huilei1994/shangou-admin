@@ -34,9 +34,8 @@
             <hr class="layui-bg-orange">
             <!--隐藏商户id-->
             <input  type="text" name="goodsId" th:value="${goods.goodsId}" hidden>
-
             <div style="display: flex ;flex-wrap: wrap">
-                <div class="layui-form-item">
+                <!--<div class="layui-form-item">
                     <label class="layui-form-label">商家ID</label>
                     <div class="layui-input-block">
                         <input type="text" name="merchantId" placeholder="请输入商家ID"
@@ -44,26 +43,20 @@
                                th:value="${goods.merchantId}"
                                style="width: 200px" class="layui-input">
                     </div>
-                </div>
+                </div>-->
                 <div class="layui-form-item">
-                    <label class="layui-form-label">商品类型ID</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="goodsTypeId" placeholder="请输入商品类型ID"
-                               lay-verify="required|number"
-                               th:value="${goods.goodsTypeId}"
-                               style="width: 200px" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">经营类型ID(主要类型)</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="businessTypeId" placeholder="请输入经营类型ID"
-                               lay-verify="required|number"
-                               th:value="${goods.businessTypeId}"
-                               style="width: 200px" class="layui-input">
-                    </div>
-                </div>
+                    <label class="layui-form-label">商品类型</label>
+                    <div class="layui-input-block" style="width: 200px">
+                        <select name="goodsTypeId" class="layui-select" lay-verify="required">
+                            <option th:each="t:${goodsTypes}"
 
+                                    th:selected="${t.goodsTypeId==goods.goodsTypeId?true:false}"
+
+                                    th:value="${t.goodsTypeId}"
+                                    th:text="${t.typeName}"></option>
+                        </select>
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">商品名</label>
                     <div class="layui-input-block">
@@ -170,24 +163,24 @@
                 <div style="margin-left: 20px">
                     <div class="layui-form-item">
                         <label class="layui-form-label">商品的主图</label>
+                        <!--<div class="layui-input-block">
+                            <img  showBig th:src="@{{filename}(filename=${goods.pic})}" style="width: 82px;height: 82px">
+                            <input   name="pic" th:value="${goods.pic}" hidden>
+                        </div>-->
                         <div class="layui-input-block">
-                            <img  th:src="@{{filename}(filename=${goods.pic})}" style="width: 82px;height: 82px">
-                            <input type="text" name="pic" th:value="${goods.pic}" hidden>
-                        </div>
-                        <div class="layui-input-block">
-                            <div lh-upload id="pic"></div>
+                            <div lh-upload id="pic" th:value="${goods.pic}"></div>
                         </div>
                     </div>
                 </div>
                 <div style="margin-left: 20px">
                     <div class="layui-form-item">
                         <label class="layui-form-label">商品详情页面的轮播图</label>
-                        <div class="layui-input-block">
-                            <img   th:src="@{{filename}(filename=${goods.imgs})}"style="width: 82px;height: 82px">
+                        <!--<div class="layui-input-block">
+                            <img  showBig th:src="@{{filename}(filename=${goods.imgs})}"style="width: 82px;height: 82px">
                             <input type="text" name="imgs" th:value="${goods.imgs}" hidden>
-                        </div>
+                        </div>-->
                         <div class="layui-input-block">
-                            <div lh-upload id="imgs"></div>
+                            <div lh-upload id="imgs" th:value="${goods.imgs}"></div>
                         </div>
                     </div>
                 </div>
@@ -290,7 +283,7 @@
 <script th:inline="javascript" type="text/javascript">
     $(function () {
         // 这些图片都是必须要上传的
-       /* let validateArr = ['pic'];*/
+        let validateArr = [];
         layui.use(['layer', 'form'], function () {
             let layer = layui.layer;
             let form = layui.form;
@@ -314,13 +307,11 @@
                 }
                 // 验证通过，开始执行入驻申请，因为图片全部都已经转换成了地址的字符串，所以实际上这里已经不涉及图片上传了，那么可以使用简单的post请求即可
 
-                /*let data1 = form.val("addForm");
-                console.log(data1);*/
 
                 $.post('/pages/back/goods/ajaxUpdateGoods', data.field, function (res) {
                     if (res.res) {//
                         layer.msg("修改成功");
-                        window.location = '/pages/back/goods/list'
+                        window.location = '/pages/back/goods/merchantList'
                     }
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div th:replace="fragment/js::js"></div>
+
+<body>
+
+<table id="goodsTypeTable" lay-filter="goodsTypeTable"></table>
+
+<script type="text/html" id="editForm">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <input type="text" name="goodsTypeId" id="goodsTypeId" hidden>
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品类型名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="typeName" id="typeName" required placeholder="请输入商品类型名称" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序编号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="sort" id="sort" placeholder="请输入排序编号" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商家ID</label>
+                <div class="layui-input-block">
+                    <input type="text" name="merchantId" id="merchantId" placeholder="请输入电话" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="editForm">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+
+<script type="text/html" id="addForm">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品类型名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="typeName"  required placeholder="请输入商品类型名称" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序编号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="sort"  placeholder="请输入排序编号" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商家ID</label>
+                <div class="layui-input-block">
+                    <input type="text" name="merchantId" placeholder="默认给自己商户添加" autocomplete="off"
+                           style="width: 160px"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="commit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+
+
+<script type="text/html" id="toolbarDemo">
+    <a class="layui-btn" lay-event="add"><i class="layui-icon layui-icon-addition"></i>添加商品类型</a>
+    <a class="layui-btn layui-btn-danger" lay-event="delete"><i class="layui-icon layui-icon-subtraction"></i>删除商品类型</a>
+</script>
+
+<script th:inline="javascript" type="text/javascript">
+    layui.use(['layer', 'laydate', 'laypage', 'table', 'form'], function () {
+        let layer = layui.layer;// 弹出层
+        let table = layui.table;// 分页组件
+        let form = layui.form;// 分页组件
+        let $ = layui.$;// 使用jquery
+
+
+        //第一个实例
+        let tb = table.render({// 渲染表格
+            elem: '#goodsTypeTable'
+            , url: '/pages/back/goodsType/ajaxGoodsTypeList' //服务后台的数据接口
+            , page: true //开启分页
+            , cols: [[ //表头，这里是两个[[开头，两个]]结尾
+                {field: '', type: 'checkbox', title: '多选'}
+                , {
+                    field: '', title: '操作', templet: function (d) {// 这个d指的是本行的数据 js对象
+                        return '<div>\n' +
+                            '            <button class="layui-btn layui-btn-xs" lay-event="updateData">修改</button>\n' +
+                            '            <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deleteData">删除</button>\n' +
+                            ' </div>'
+                    }
+                }
+                , {field: 'goodsTypeId', title: '商品类型ID', sort: true}
+                , {field: 'typeName', title: '商品类型名称'}
+                , {field: 'sort', title: '排序编号'}
+                , {field: 'merchantId', title: '商家ID'}
+            ]]
+            , toolbar: '#toolbarDemo'
+        });
+
+        form.on('submit(commit)', function (data) {
+            console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+            $.post('/pages/back/goodsType/ajaxAddGoodsType'
+                , data.field
+                , function (res) {
+                    if (res.res) {
+                        layer.msg("添加成功")
+                        layer.closeAll()
+                    }
+                });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        form.on('submit(editForm)', function (data) {
+           //console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+           // console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+            $.post('/pages/back/goodsType/ajaxEditGoodsType'
+                , data.field
+                , function (res) {
+                    if (res.res) {
+                        layer.msg("修改成功")
+                        layer.closeAll()
+                        tb.reload();
+                    }
+                });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        let updateOpen;
+        //监听工具条
+        table.on('tool(goodsTypeTable)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            console.log(obj)
+            if (layEvent === 'updateData') {
+                console.log(data)
+                console.log(layEvent)
+                updateOpen = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
+                    type: 1,
+                    area: ['350px', '500px'],
+                    shadeClose: true,
+                    title: "商品类型修改",
+                    content: $("#editForm").html()
+                });
+
+                $("#goodsTypeId").val(data.goodsTypeId)
+                $("#typeName").val(data.typeName)
+                $("#sort").val(data.sort)
+                $("#merchantId").val(data.merchantId)
+
+            } else if (layEvent === 'deleteData') { //删除
+                layer.confirm('真的删除么', function (index) {
+                    console.log(layEvent)
+                    $.post('/pages/back/goodsType/ajaxDeleteGoodsType'
+                        , {goodsTypeId:data.goodsTypeId}
+                        , function (res) {
+                            if (res.res) {
+                                layer.msg("删除成功")
+                                layer.close(index);
+                            }
+                        });
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+                });
+            }
+
+        });
+
+        let addOpen;
+        // 工具栏监听事件监听事件
+        table.on('toolbar(goodsTypeTable)', function (obj) {
+            console.log(obj);
+            switch (obj.event) {
+                case 'add':
+                    layer.msg('添加');
+                    addOpen = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
+                        type: 1,
+                        area: ['350px', '500px'],
+                        shadeClose: true,
+                        title: "商品类型添加",
+                        content: $("#addForm").html()
+                    });
+                    break;
+                case 'delete':
+                    if (isChecked==true){
+                        let ids='';
+                        checkStatus.forEach(function (value) {
+                            ids += value.goodsTypeId + ',';
+                        })
+                        layer.confirm('真的删除么', function (index) {
+                            $.post('/pages/back/goodsType/ajaxDeleteGoodsTypes'
+                                , {goodsTypeIds:ids}
+                                , function (res) {
+                                    if (res.res) {
+                                        layer.msg("删除成功")
+                                        tb.reload();
+                                    }
+                                });
+                            obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                            layer.close(index);//向服务端发送删除指令
+                            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                        });
+                    }else {
+                        layer.msg('请选择需要删除用户');
+                    }
+                    break;
+            };
+        });
+        var checkStatus;
+        var isChecked;
+        table.on('checkbox(goodsTypeTable)', function (obj) {
+            console.log(obj); //当前是否选中状态
+            console.log(obj.checked); //当前是否选中状态
+            console.log(obj.data); //选中行的相关数据
+            console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
+            isChecked = obj.checked;
+            checkStatus = layui.table.checkStatus('goodsTypeTable').data;
+            console.log(checkStatus);
+        });
+
+    });
+
+
+</script>
+
+<style>
+    .testCls {
+        color: red;
+    }
+</style>
+</body>
+
+</html>

@@ -12,13 +12,14 @@
     <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
     <result column="roles" jdbcType="VARCHAR" property="roles" />
     <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="photo" jdbcType="VARCHAR" property="photo" />
   </resultMap>
   <sql id="Base_Column_List">
     user_id, nick_name, real_name, `password`, phone, email, last_login_ip, last_login_time, 
-    roles, note
+    roles, note, photo
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from user
     where user_id = #{userId,jdbcType=BIGINT}
@@ -28,15 +29,15 @@
     where user_id = #{userId,jdbcType=BIGINT}
   </delete>
 
-    <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="com.hl.shangou.pojo.entity.User" useGeneratedKeys="true">
+  <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="com.hl.shangou.pojo.entity.User" useGeneratedKeys="true">
     insert into user (nick_name, real_name, `password`, 
       phone, email, last_login_ip, 
-      last_login_time, roles, note
-      )
+      last_login_time, roles, note, 
+      photo)
     values (#{nickName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{lastLoginIp,jdbcType=VARCHAR}, 
-      #{lastLoginTime,jdbcType=TIMESTAMP}, #{roles,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}
-      )
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{roles,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
+      #{photo,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="user_id" keyProperty="userId" parameterType="com.hl.shangou.pojo.entity.User" useGeneratedKeys="true">
     insert into user
@@ -68,6 +69,9 @@
       <if test="note != null">
         note,
       </if>
+      <if test="photo != null">
+        photo,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="nickName != null">
@@ -96,6 +100,9 @@
       </if>
       <if test="note != null">
         #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -129,6 +136,9 @@
       <if test="note != null">
         note = #{note,jdbcType=VARCHAR},
       </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=BIGINT}
   </update>
@@ -142,15 +152,10 @@
       last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
       last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
       roles = #{roles,jdbcType=VARCHAR},
-      note = #{note,jdbcType=VARCHAR}
+      note = #{note,jdbcType=VARCHAR},
+      photo = #{photo,jdbcType=VARCHAR}
     where user_id = #{userId,jdbcType=BIGINT}
   </update>
-
-
-
-
-
-
   <select id="selectUserByPhoneAndPassword" resultType="com.hl.shangou.pojo.vo.UserVO">
     select
     <include refid="Base_Column_List"/>
@@ -163,7 +168,32 @@
   </select>
 
 
-  <select id="ajaxUserList" resultType="com.hl.shangou.pojo.entity.User">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <select id="selectUserVOByIds" resultType="com.hl.shangou.pojo.vo.UserVO">
+    select
+    <include refid="Base_Column_List"/>
+    from user where user_id in
+    <foreach collection="ids" open="(" close=")" item="id" separator=",">
+      #{id}
+    </foreach>
+  </select>
+
+
+  <select id="ajaxUserList" resultType="com.hl.shangou.pojo.vo.UserVO">
     select
     <include refid="Base_Column_List"/>
     from user
@@ -174,43 +204,47 @@
       <if test="realName != null and realName!=''">
         and real_name like CONCAT('%',#{realName},'%')
       </if>
-
+      <if test="note != null and note!=''">
+        and note like CONCAT('%',#{note},'%')
+      </if>
       <if test="phone != null and phone!=''">
         and phone like CONCAT('%',#{phone},'%')
       </if>
-      <if test="note != null and  note!=''">
-        and note like CONCAT('%',#{note},'%')
-      </if>
     </where>
+    order by user_id
     limit #{start},#{limit}
+
   </select>
   <select id="ajaxGetCount" resultType="java.lang.Integer">
-    select count(*)
+    select
+    COUNT(*)
     from user
     <where>
+      user_id>0
       <if test="nickName != null and nickName!=''">
         and nick_name like CONCAT('%',#{nickName},'%')
       </if>
       <if test="realName != null and realName!=''">
         and real_name like CONCAT('%',#{realName},'%')
       </if>
-
+      <if test="note != null and note!=''">
+        and note like CONCAT('%',#{note},'%')
+      </if>
       <if test="phone != null and phone!=''">
         and phone like CONCAT('%',#{phone},'%')
-      </if>
-      <if test=" note != null and note!=''">
-        and note like CONCAT('%',#{note},'%')
       </if>
     </where>
   </select>
 
 
-  <delete id="deleteByPrimaryKeys" parameterType="long">
-    delete from user
-    where user_id in
-    <foreach collection="userIds" item="userId" open="(" separator="," close=")">
-      #{userId}
+
+  <delete id="deleteByPrimaryKeys">
+    delete
+    from user where user_id in
+    <foreach collection="ids" open="(" close=")" item="id" separator=",">
+      #{id}
     </foreach>
+
   </delete>
 
 </mapper>

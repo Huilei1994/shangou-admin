@@ -72,7 +72,6 @@ public class LoginController extends BaseController{
         if (isBack) {
             return "loginPage";
         }
-
         // 不是后台登录，就是前端登录
         SavedRequest savedRequest = WebUtils.getSavedRequest(request);//shiro保存拦截之前的请求对象
         if (savedRequest != null) {
@@ -85,7 +84,6 @@ public class LoginController extends BaseController{
         return "client-loginPage";
     }
 
-
     //新增前台用户登录注册
     // 这个方法是跳转到登录成功页面用的
     @RequestMapping("/loginSuccess")
@@ -93,10 +91,8 @@ public class LoginController extends BaseController{
 
         //后台直接返回后台成功主界面
         if (isBack) return "pages/back/home";
-
         //判断之前是否有被拦截的url
         SavedRequest savedRequest = WebUtils.getSavedRequest(request);
-
         if (savedRequest != null) {
             //说明是在前台摸个界面要求登录
             // 获取参数字符串,有被拦截的路径，就跳转回拦截之前的那个路径
@@ -107,13 +103,9 @@ public class LoginController extends BaseController{
             //直接跳回被拦截的路径+参数
             return "redirect:"+savedRequest.getRequestUrl()+"?"+queryString;
         }
-
-
-
         //登录就跳转到我的界面
         return "pages/back/client/my-info";// 应该跳转到客户端我的界面
     }
-
 
 
     // 登录后显示的主界面

@@ -1,12 +1,16 @@
 package com.hl.shangou.controller;
 
 import com.hl.shangou.config.webmvc.WebMvcConfig;
+import com.hl.shangou.pojo.entity.Merchant;
+import com.hl.shangou.service.MerchantService;
+import com.hl.shangou.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +22,12 @@ import java.util.UUID;
  */
 
 public class BaseController {
+
+    @Resource
+    MerchantService merchantService;
+
+
+
     protected String saveFile(MultipartFile f, String uploadPath) {// 很多控制器里边都可能会有保存文件的操作
         if (f != null && !f.isEmpty()) {
             if (f.getSize() > 0) {
@@ -51,6 +61,25 @@ public class BaseController {
 
     protected Session getSession() {// 获取shiro自己的session
         return SecurityUtils.getSubject().getSession();
+    }
+
+    protected Long getUserId() {// 获取当前用户id
+        return (Long) getSession().getAttribute("userId");
+    }
+
+    protected String getPhone() {// 获取当前用户手机
+        return (String) getSession().getAttribute("phone");
+    }
+
+    protected Long getMerchantId() {// 获取当前用户的商户id
+        Long merchantId = (Long) getSession().getAttribute("merchantId");
+        if (merchantId == null) {
+            merchantId = merchantService.selectMerchantIdByUserId(getUserId());
+            if (merchantId != null) {
+                getSession().setAttribute("merchantId", merchantId);// 保存到session里边去
+            }
+        }
+        return merchantId;
     }
 
 

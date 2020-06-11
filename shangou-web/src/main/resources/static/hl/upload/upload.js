@@ -4,20 +4,17 @@ function setImgInput(divImg) {
         let src = this.src;
         src = src.substring(src.indexOf('/upload/'));
         urls += src + ",";
-        console.log(src);
     });
     urls = urls.substring(0, urls.length - 1);
     let uploadDiv = divImg.parent();
     let name = uploadDiv.attr("id");
-    console.log(name);
     uploadDiv.children("input[name=" + name + "]").remove();
     divImg.before($("<input name='" + name + "' type='hidden' value='" + urls + "'/>"));
-    console.log(urls);
 }
 
 function appendImg(url, divImg) {
     let deleteBtn = $("<span style='color: orange;display: none;position: absolute;z-index: 1;left: 50%;top:50%;cursor: pointer;transform: translate(-50%,-50%)'>删除</span>")
-    let img = $("<div style=\"width: 80px;height: 80px;padding: 5px 0;position: relative\">\n" +
+    let img = $("<div style=\"width: 80px;height: 80px;padding: 5px 0;position: relative;margin-right: 5px\">\n" +
         "                                                <img src='" + url + "' style=\"width: 100%;height: 100%;border-radius: 5px\"/>\n" +
         "                                            </div>");
     img.prepend(deleteBtn);
@@ -32,13 +29,17 @@ function appendImg(url, divImg) {
     });
     divImg.before(img);
     setImgInput(divImg);
-    divImg.siblings("input[type=file]")[0].value='';
+    divImg.siblings("input[type=file]")[0].value = '';
 }
+
+// 可以配置url（自定义上传文件路径）和dir（保存文件路径）
 function uploadFile(options) {
     let url = "/pages/back/upload/uploadFiles";
     $("div[lh-upload]").each(function () {
+
         let divId = this.id;
         let uploadDiv = $(this);
+        uploadDiv.css({display: 'flex', 'flex-wrap': 'wrap', 'align-items': 'center'})
         let id = divId + '-File';
         let divImgId = divId + '-img';
         let fileInput = $("<input type='file' style='display: none' id='" + id + "'  multiple/>");
@@ -50,10 +51,17 @@ function uploadFile(options) {
         divImg.click(function () {
             fileInput.click();
         });
+        let initValue = $(this).attr("value");// 这一句话是或div标签的属性的值
 
+        if (initValue != undefined) {// 有值
+            let arr = initValue.split(',');
+            arr.forEach(url => {
+                appendImg(url, divImg);
+            })
+        }
         fileInput.change(function () {// 直接开始上传文件
             let files = this.files;
-            console.log(files);
+
             let formData = new FormData();
             for (let x = 0; x < files.length; x++) {
                 formData.append("files" + x, files[x]);
@@ -79,7 +87,7 @@ function uploadFile(options) {
                 success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
                     if (res.res) {
                         let urls = res.data;
-                        if(urls!=''&&urls!=null){
+                        if (urls != '' && urls != null) {
                             if (urls.indexOf(",") > -1) {// 有逗号，表示多个图片
                                 let arr = urls.split(',');
                                 arr.forEach((url) => {
@@ -89,14 +97,12 @@ function uploadFile(options) {
                                 appendImg(urls, divImg);
                             }
                         }
-                    }else {
+                    } else {
                         alert(res.msg)
                     }
                 },
                 type: 'post',// ajax请求的方式，post或get
             })
-
-
         })
     })
 }

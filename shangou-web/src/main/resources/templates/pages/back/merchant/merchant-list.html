@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<div th:replace="fragment/js::js"></div>
 <div th:replace="fragment/map::map"></div>
+<div th:replace="fragment/js::js"></div>
 <style>
     /*修改layui表格的高度*/
     .layui-table-cell {
@@ -14,7 +14,6 @@
 </style>
 <body>
 <div>
-
     <!--搜索框-->
     <div style="margin-top: 20px;margin-left: 50px">
         <form class="layui-form" method="post" style="display: flex ;flex-wrap:wrap;">
@@ -429,6 +428,8 @@
 </script>
 
 <script th:inline="javascript" type="text/javascript">
+
+    initMap();
     layui.use(['layer', 'table', 'form'], function () {
         // 我再js代码里边如何获取控制器传递过来的参数呢？
         let layer = layui.layer;// 弹出层

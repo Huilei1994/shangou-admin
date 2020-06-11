@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.shangou.dao.AppConfigDao">
+  <resultMap id="BaseResultMap" type="com.hl.shangou.pojo.entity.AppConfig">
+    <id column="config_id" jdbcType="INTEGER" property="configId" />
+    <result column="key" jdbcType="VARCHAR" property="key" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    config_id, `key`, `value`, note
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from app_config
+    where config_id = #{configId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from app_config
+    where config_id = #{configId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="config_id" keyProperty="configId" parameterType="com.hl.shangou.pojo.entity.AppConfig" useGeneratedKeys="true">
+    insert into app_config (`key`, `value`, note
+      )
+    values (#{key,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="config_id" keyProperty="configId" parameterType="com.hl.shangou.pojo.entity.AppConfig" useGeneratedKeys="true">
+    insert into app_config
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="key != null">
+        `key`,
+      </if>
+      <if test="value != null">
+        `value`,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="key != null">
+        #{key,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null">
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hl.shangou.pojo.entity.AppConfig">
+    update app_config
+    <set>
+      <if test="key != null">
+        `key` = #{key,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null">
+        `value` = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where config_id = #{configId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hl.shangou.pojo.entity.AppConfig">
+    update app_config
+    set `key` = #{key,jdbcType=VARCHAR},
+      `value` = #{value,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR}
+    where config_id = #{configId,jdbcType=INTEGER}
+  </update>
+</mapper>

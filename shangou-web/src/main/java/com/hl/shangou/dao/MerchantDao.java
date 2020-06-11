@@ -26,4 +26,13 @@ public interface MerchantDao {
     List<Merchant> ajaxList(MerchantQuery query);
 
     int ajaxSelectCount(MerchantQuery query);
+
+    List<Merchant> nearbyMerchantByLngLat(MerchantQuery merchantQuery);
+
+
+    List<MerchantVO> ajaxListMerchantVO(MerchantQuery query);
+
+    Integer ajaxListCount(MerchantQuery query);
+
+    MerchantVO selectByPK(Long merchantId);
 }

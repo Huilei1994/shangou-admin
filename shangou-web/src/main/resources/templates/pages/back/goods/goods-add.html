@@ -16,6 +16,7 @@
 <div th:replace="fragment/map::map"></div>
 
 <script type="text/javascript" th:src="@{/hl/cityPiker/cityPiker.js}"></script>
+<script type="text/javascript" th:src="@{/hl/cityPiker/province.js}"></script>
 <script type="text/javascript" th:src="@{/hl/upload/upload.js}"></script>
 <body style="margin: 0;background: rgb(245,245,245)">
 <div>
@@ -49,22 +50,22 @@
                         </div>
                     </div>-->
                     <div class="layui-form-item">
-                        <label class="layui-form-label">商品类型ID</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="goodsTypeId"  placeholder="请输入商品类型ID"
-                                   lay-verify="required|number"
-                                   style="width: 200px" class="layui-input">
+                        <label class="layui-form-label">商品类型</label>
+                        <div class="layui-input-block" style="width: 200px">
+                            <select name="goodsTypeId" class="layui-select" lay-verify="required" >
+                                <option th:each="t:${goodsTypes}" th:value="${t.goodsTypeId}"
+                                        th:text="${t.typeName}"></option>
+                            </select>
                         </div>
                     </div>
-                    <div class="layui-form-item">
+                    <!--<div class="layui-form-item">
                         <label class="layui-form-label">经营类型ID(主要类型)</label>
                         <div class="layui-input-block">
                             <input type="text" name="businessTypeId" placeholder="请输入经营类型ID"
                                    lay-verify="required|number"
                                    style="width: 200px" class="layui-input">
                         </div>
-                    </div>
-
+                    </div>-->
                     <div class="layui-form-item">
                         <label class="layui-form-label">商品名</label>
                         <div class="layui-input-block">
@@ -115,9 +116,10 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">省份</label>
-                        <div class="layui-input-block">
-                            <input type="text" required name="province" placeholder="请输入省份"
-                                   style="width: 200px" class="layui-input">
+                        <div class="layui-input-block" style="width: 200px">
+                            <select name="province" class="myProvincePick" msgEmpty="请选择省份">
+
+                            </select>
                         </div>
                     </div>
 
@@ -212,6 +214,7 @@
             <div style="text-align: center">
                 <button class="layui-btn " id="commit" lay-submit lay-filter="commit" style="background-color: orange;width: 250px">立即添加</button>
             </div>
+            <hr class="layui-bg-orange">
         </form>
     </div>
 
@@ -297,7 +300,7 @@
                 $.post('/pages/back/goods/ajaxAdd', data.field, function (res) {
                     if (res.res) {//
                         layer.msg("添加成功");
-                        window.location='/pages/back/goods/list'
+                        window.location='/pages/back/goods/merchantList'
                     }
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。

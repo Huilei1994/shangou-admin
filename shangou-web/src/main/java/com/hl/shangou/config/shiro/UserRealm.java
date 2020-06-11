@@ -5,6 +5,7 @@ import com.hl.shangou.pojo.query.UserQuery;
 import com.hl.shangou.pojo.vo.RoleVO;
 import com.hl.shangou.pojo.vo.UserVO;
 import com.hl.shangou.service.UserService;
+import com.hl.shangou.util.net.NetUtil;
 import com.hl.shangou.util.password.PasswordUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -88,10 +89,20 @@ public class UserRealm extends AuthorizingRealm {
         session.setAttribute("nickName", dbUser.getNickName());
         session.setAttribute("realName", dbUser.getRealName());
         session.setAttribute("phone", dbUser.getPhone());
+        session.setAttribute("photo", dbUser.getPhoto());
         // 设置角色
 
         List<RoleVO> roleVOS = userService.selectHisRolesByPhone(dbUser.getPhone());
         session.setAttribute("hisRoles", roleVOS);
+
+
+        //设置最后登录时间和最后登录ip
+        User user = new User();
+        String ipAddr = NetUtil.getIpAddr();
+        user.setUserId(dbUser.getUserId());
+        user.setLastLoginIp(ipAddr);
+        user.setLastLoginTime(new Date());
+        userService.updateByPrimaryKeySelective(user);
 
 
         // 设置权限
@@ -113,8 +124,6 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {// 登录成功之后，给用户授予角色和权限用的，或者说检测用户的角色和权限的
         SimpleAuthorizationInfo auth = new SimpleAuthorizationInfo();
-
-
         return auth;
 
     }

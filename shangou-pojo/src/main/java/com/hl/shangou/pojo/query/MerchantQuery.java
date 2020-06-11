@@ -205,5 +205,8 @@ public class MerchantQuery extends PageQuery {
     private Double maxDeliveryArea;
 
 
+    private Double maxLng, maxLat, minLng, minLat;// 最小最大经纬度
+
+
 
 }

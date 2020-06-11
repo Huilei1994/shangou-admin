@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="map" >
-    <script type="text/javascript"
-            src="https://webapi.amap.com/maps?v=2.0&key=4ef33553bc26e63d127b878325234f2f"></script>
+<div th:fragment="map">
     <div class="layui-row" id="mapDiv"
          style="position: absolute;height: 100%;width: 100%;background: rgba(0,0,0,0.3);display: none;z-index: 999;">
         <div id="mapShadow" style="position: absolute;left: 0;right: 0;top: 0;bottom: 0">
@@ -19,19 +17,32 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript"
+            src="https://webapi.amap.com/maps?v=2.0&key=4ef33553bc26e63d127b878325234f2f"></script>
     <script th:inline="javascript" type="text/javascript">
-        let placeSearch;
-        let autoComplete;
+        let placeSearch;// 地址搜索
+        let autoComplete;// 输入自动提示
         let nearby = [];
         let lnglat;
         let currentInput;
+        let currentLngLat;// 当前定位得到的经纬度
+        let geolocation;// 定位插件
+        let geocoder;// 定位插件
         let map;
-        $(function () {
+
+        function getCityInfo(f) {// 获得城市信息要做的回调函数
+            geolocation.getCityInfo(function (status, result) {
+                f(result);
+            });
+        }
+
+        // 初始化map,selectedPosition选择地址后的回调函数
+        function initMap(selectedPosition) {
             map = new AMap.Map('mapContainer', {// 创建一个map对象
                 zoom: 18,
             });
-            AMap.plugin(['AMap.AutoComplete', 'AMap.PlaceSearch'], function () {// 增加地图插件
-                // 实例化Autocomplete
+            map.plugin(['AMap.AutoComplete', 'AMap.PlaceSearch', 'AMap.Geolocation', 'AMap.Geocoder'], function () {// 增加地图插件
+                // 实例化PlaceSearch:  搜索模糊地址的插件
                 placeSearch = new AMap.PlaceSearch({ //构造地点查询类
                     pageSize: 10,// 分页行数
                     pageIndex: 1,
@@ -42,13 +53,42 @@
                     // extensions: "all",
                     // panel: "panel"
                 });
+                // 输入提示地址的插件
                 autoComplete = new AMap.AutoComplete({
                     // input 为绑定输入提示功能的input的DOM ID
                     input: 'searchPlace'
                 });
+                geolocation = new AMap.Geolocation({
+                    enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                    timeout: 10000,          //超过20秒后停止定位，默认：无穷大
+                    maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+                    convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+                    showButton: true,        //显示定位按钮，默认：true
+                    buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+                    buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                    showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
+                    showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
+                    panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+                    zoomToAccuracy: true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                });
+                geocoder = new AMap.Geocoder();
+                map.addControl(geolocation);
+                geolocation.getCurrentPosition(function (a, res) {
+                    if (a == 'complete') {// 定位成功.// 这个精确定位需要https安全访问
+                        // currentLngLat = res.position;
+                        // $("#mapC").append(res.message);
+                        // geocoder.getAddress(currentLngLat, function (m, n, d) {
+                        //     console.log(m, n, d);
+                        //
+                        // })
+                    } else if (a == 'error') {// 定位失败
+                        console.log('定位错误')
+                    }
+                });
+
+
                 // 无需再手动执行search方法，autoComplete会根据传入input对应的DOM动态触发search
                 autoComplete.on('select', function (a) {
-                    console.log(a);// 凡是无非就两种：要么就是js对象，要么就是函数，要么数组
                     let l = a.poi.location;// 经纬度对象  Lnglat
                     if (l != undefined) {
                         lnglat = l;
@@ -71,7 +111,11 @@
                     if (a == 'complete') {
                         let data = b.poiList.pois;// 附近的对象赋值给提前定义好的数组对象
                         nearby = data;// [{},{},{},{}]
-                        renderAddressList(nearby)
+                        if (selectedPosition != undefined) {
+                            renderAddressList(nearby, selectedPosition)
+                        } else {
+                            renderAddressList(nearby)
+                        }
                     }
                 })
             });
@@ -82,11 +126,10 @@
             $("#mapShadow").click(function () {
                 toggleMap();
             });
-
-        });
+        }
 
         function toggleMap(lng, lat) {// 这个函数就是触发map展示或者隐藏
-            if (lng,lat != undefined) {// 传递了经纬度
+            if (lng, lat != undefined) {// 传递了经纬度
                 lnglat = new AMap.LngLat(lng, lat);
                 map.clearMap();// 清空地图上的覆盖物
                 map.setCenter(lnglat);// 把地图是视角移动到你定义的那个经纬度去
@@ -103,7 +146,7 @@
             }
         }
 
-        function renderAddressList(list) {
+        function renderAddressList(list, f) {
             let addressListDiv = $("#addressListDiv");
             addressListDiv.empty();
             list.forEach((i, index) => {
@@ -126,10 +169,14 @@
                     }
                     $("#searchPlace").val(i.name);
                     toggleMap();
+                    if (f != undefined) {
+                        f(i)
+                    }
                 });
                 addressListDiv.append(item);
             })
         }
     </script>
+
 </div>
 </html>

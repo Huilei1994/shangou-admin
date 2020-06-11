@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.shangou.dao.ShopCarDao">
+  <resultMap id="BaseResultMap" type="com.hl.shangou.pojo.entity.ShopCar">
+    <id column="shop_car_id" jdbcType="INTEGER" property="shopCarId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="goods_id" jdbcType="BIGINT" property="goodsId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    shop_car_id, user_id, merchant_id, `count`, goods_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from shop_car
+    where shop_car_id = #{shopCarId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from shop_car
+    where shop_car_id = #{shopCarId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="shop_car_id" keyProperty="shopCarId" parameterType="com.hl.shangou.pojo.entity.ShopCar" useGeneratedKeys="true">
+    insert into shop_car (user_id, merchant_id, `count`, 
+      goods_id)
+    values (#{userId,jdbcType=BIGINT}, #{merchantId,jdbcType=BIGINT}, #{count,jdbcType=INTEGER}, 
+      #{goodsId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" keyColumn="shop_car_id" keyProperty="shopCarId" parameterType="com.hl.shangou.pojo.entity.ShopCar" useGeneratedKeys="true">
+    insert into shop_car
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="merchantId != null">
+        merchant_id,
+      </if>
+      <if test="count != null">
+        `count`,
+      </if>
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantId != null">
+        #{merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="count != null">
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hl.shangou.pojo.entity.ShopCar">
+    update shop_car
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantId != null">
+        merchant_id = #{merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="count != null">
+        `count` = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null">
+        goods_id = #{goodsId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where shop_car_id = #{shopCarId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hl.shangou.pojo.entity.ShopCar">
+    update shop_car
+    set user_id = #{userId,jdbcType=BIGINT},
+      merchant_id = #{merchantId,jdbcType=BIGINT},
+      `count` = #{count,jdbcType=INTEGER},
+      goods_id = #{goodsId,jdbcType=BIGINT}
+    where shop_car_id = #{shopCarId,jdbcType=INTEGER}
+  </update>
+</mapper>

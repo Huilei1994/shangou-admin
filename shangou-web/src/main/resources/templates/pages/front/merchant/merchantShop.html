@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragment/js::js"></div>
+<script type="text/javascript" th:src="@{/hl/layer/layer.js}"></script>
+<body>
+<style>
+    #typeDiv > div:hover {
+        cursor: pointer;
+        background: white;
+        font-weight: bold;
+    }
+
+    #goodsItemDiv div {
+        margin: 5px;
+    }
+
+    [lh-layer] > div {
+        /*transform: translate3d(0, 100%, 0);*/
+    }
+</style>
+<!--#fd0c2c到#fd2a47-->
+<div style="position: absolute;left: 0;top: 0;bottom: 0;right: 0;">
+    <div class="layui-col-xs12 layui-col-md6 layui-col-md-offset3 "
+         style="height: 100%;position: relative;">
+        <!-- 搜索框-->
+        <div style="position: absolute;width: 100%;background: white;z-index: 999">
+            <div style="display: flex;justify-content: space-between;align-items: center">
+                <div onclick="window.history.go(-1)" style="padding: 10px;"><i class="layui-icon-return layui-icon"
+                                                                               style="font-weight: bold"></i></div>
+                <div style="padding: 10px 35px 10px 10px;flex: 1">
+                    <input style="font-size: 0.7rem;background: rgb(240,240,240);border-radius: 15px;width: 100%;padding: 5px 10px;border: solid rgb(240,240,240);"
+                           placeholder="店内搜索商品"/>
+                </div>
+                <div style="padding: 10px;">搜索</div>
+            </div>
+        </div>
+        <div>
+            <div id="contentDiv"
+                 style="position: absolute;top:50px;bottom: 50px;left: 0;right: 0;">
+                <div style="position: absolute;top: 0;left: 0;right: 0" id="merchantInfoDiv">
+                    <div style="display: flex;justify-content: space-between">
+                        <div style="flex: 1">
+                            <div style="display: flex">
+                                <div style="padding: 10px">
+                                    <img th:src="${m.shopLogo}"
+                                         style="width: 60px;height: 60px;border-radius: 20px 0 20px 0"/>
+                                </div>
+                                <div style="margin-left: 5px">
+                                    <h3 style="font-weight: bold" th:text="${m.shopName}">店铺名字</h3>
+                                    <div style="padding: 5px 0;font-size: 12px" th:text="${m.title1}">顺丰转送</div>
+                                    <div style="padding: 5px 0;font-size: 12px" th:text="${m.title2}">寄出运费</div>
+                                </div>
+                            </div>
+                            <div style="padding: 10px">
+                                <span style="color: white;background: red;border-radius: 5px 0 5px 0;padding: 2px">活动</span>
+                                <span style="margin-left: 10px" th:text="${m.title3}">双十一师傅满十五</span>
+                            </div>
+
+                        </div>
+                        <div style="width: 20%;text-align: right;padding: 10px;display: flex;flex-direction: column;justify-content: space-between">
+
+                            <div>
+                                <i style="font-size: 30px" class="layui-icon-star layui-icon"></i>
+                            </div>
+                            <div>
+                            </div>
+                            <nobr>更多优惠<i class="layui-icon-down layui-icon"></i></nobr>
+
+                        </div>
+                    </div>
+                </div>
+                <div id="goodsInfoDiv" class="hideScrollBar"
+                     style="position: absolute;left: 0;right: 0;top: 0;bottom: 0;overflow-y: scroll;">
+                    <div style="margin-top: 115px;height: 100%;min-height: 400px;position: relative;background: white"
+                         id="typeAndGoodsDiv">
+                        <!--          <div id="shade"  style="position: absolute;left: 0;bottom: 0;right: 0;top: 0;z-index: 888;background: rgba(0,0,0,0.01)"></div>-->
+                        <div style="width: 80px;background: rgb(240,240,240);position: absolute;bottom: 0;top: 0;overflow-y: auto;padding-bottom: 50px"
+                             id="typeDiv">
+                            <div th:each="t:${m.goodsTypeList}" th:text="${t.typeName}"
+                                 th:id="'typeId-'+${t.goodsTypeId}+'-'+${m.merchantId}" style="padding:15px 10px">
+                                烟酒
+                            </div>
+                        </div>
+                        <div id="goodDiv"
+                             style="position: absolute;left:80px;right:0;top:0;bottom:0;overflow-y: auto;padding-bottom: 50px">
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div style="z-index: 9999;height: 50px;left: 0;right:0;bottom: 0;position: absolute;width: 100%;background: white;box-shadow: 0 0 18px lightgray;">
+            <div style="display: flex;height: 100%;align-items: center;justify-content: space-between"
+                 id="bottomMenuDiv">
+                <div style="flex-grow: 1;" id="homeDiv">
+                    <div style="display: flex;justify-content: space-between;align-items: center">
+                        <div style="padding: 0 10px;display: flex">
+                            <div style="background: orange;padding:10px ;border-radius: 100%;position: relative;"
+                                 id="showCar">
+                                <img th:src="@{/images/pages/front/merchant/shopCar.png}" style="width: 30px"/>
+                                <div id="allCount"
+                                     style="position: absolute;right: 0;top: 0;color: white;background: red;border-radius: 100%;width: 16px;height: 16px;display: flex;justify-content: center;align-items: center;font-size: 0.5rem">
+                                    0
+                                </div>
+                            </div>
+                            <div style="padding:15px 0 0 10px">
+                                <span style="color: orangered;font-size: 20px;font-weight: bold"
+                                      id="totalMoney">¥0.00</span>
+                                <span style="color: gray;">已减<span id="allRelief">0.00</span>元</span>
+                            </div>
+
+                        </div>
+
+                        <div id="settlementDiv"
+                             style="background: orange;width: 6rem;height:50px;display: flex;align-items: center;justify-content: center">
+                            <div style="font-size: 20px;font-weight: bold;color: white;cursor: pointer;user-select: none">
+                                去结算
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <!--自定义的弹框-->
+        <div lh-layer id="shopCarLayer">
+            <div style="padding: 10px;height: 70%">
+                <div style="display: flex;justify-content: space-between;border-bottom: solid lightgray 1px;">
+                    <div class="layui-form" style="display: flex;align-items: center">
+                        <input type="checkbox" id="checkAll" lay-skin="primary" lay-filter="checkAll"> 全选(已选<span
+                            id="allCount">0</span>件,共<span
+                            id="allWeight">2.4</span>kg)
+                    </div>
+                    <div style="display: flex;align-items: center" id="clearShopCar">
+                        <i style="font-size: 25px" class=" layui-icon-delete layui-icon"></i><span
+                            style="margin-left: 3px">清空购物车</span>
+                    </div>
+                </div>
+                <form id="infosForm" style="display: none" th:action="@{/pages/back/order/orderAddPre}" method="post">
+                    <input id="infos" name="infos"/>
+                    <input name="merchantId" th:value="${m.merchantId}">
+                    <input id="allCost" name="allCost" type="hidden"/>
+
+                </form>
+                <div id="shopCarContent" style="padding-bottom: 50px;overflow-y: auto;max-height: 70%">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:inline="javascript" type="text/javascript">
+    // 算购物车里边的钱
+    function getSumMoney() {
+        let sum = 0.0;// 定义 现在的总价
+        let oldSum = 0.0;// 定义原来商品总价
+        let allCount = 0;// 定义总数
+        $("[name=checkItem]").each(function () {
+            if (this.checked) {// 选中
+                let gid = this.goods.goodsId;
+                let count = parseInt($("#carGoodsCount-" + gid).text().trim());
+                sum += count * this.goods.nowPrice;
+                oldSum += count * (this.goods.oldPrice-this.goods.nowPrice);
+                allCount += count;
+            }
+        });
+        $("[id=allCount]").text(allCount);
+        $("#totalMoney").text("¥" + sum.toFixed(2));
+        $("#allRelief").text(oldSum.toFixed(2));
+        if (sum <= 0) {
+            $("#settlementDiv").css({
+                background: 'gray'
+            })
+            $("#showCar").css({
+                background: 'gray'
+            })
+        } else {
+            $("#settlementDiv").css({
+                background: 'orange'
+            })
+            $("#showCar").css({
+                background: 'orange'
+            })
+        }
+        return sum.toFixed(2);
+    }
+
+    function updateCarCount(gid, finalCount) {
+// 算账完毕之后发送跟新购物车的请求
+        let userId = [[${session.userId}]];
+        if (userId != null && userId != undefined) {
+            $.post('/pages/back/shopCar/editCount', {
+                merchantId: [[${m.merchantId}]],
+                goodsId: gid,
+                count: finalCount
+            });
+        }
+    }
+
+    function appendCar(domObj, form) {
+        let g = domObj.goods;// 取出商品
+        let gid = domObj.id.split('-')[1];
+        let shopCarContent = $("#shopCarContent");
+        let shopCarGoods = shopCarContent.find("[id^=carAddCount-" + gid + "]");
+        if (shopCarGoods[0] == undefined) {// 购物车弹框里边没有此商品，应该加进去
+            let count = parseInt($("#goodsCount-" + gid).text().trim());
+            // 这个时候的数量应该是列表中的数量
+            let goodsDiv = $("<div id='goodsDiv-" + gid + "' style=\"display: flex;padding: 2px 0px;border-bottom: solid 0.5px rgb(240,240,240);\">\n" +
+                "                    <div class=\"layui-form\" style=\"display: flex;align-items: center\">\n" +
+                "                        <input type=\"checkbox\" id='checkItem-" + gid + "' name=\"checkItem\" lay-skin=\"primary\" lay-filter='checkItem'>\n" +
+                "                    </div>\n" +
+                "                    <div style=\"margin: 5px\">\n" +
+                "                        <img src='" + g.pic + "' style=\"width: 40px\"/>\n" +
+                "                    </div>\n" +
+                "                    <div id=\"goodsItemDiv\" style=\"flex: 1;position: relative \">\n" +
+                "                        <div style=\"margin-left: 5px\">" + g.title + "</div>\n" +
+                "                        <div style=\"font-size: 0.8rem;color: orangered\">¥<span id='carPrice-" + gid + "'>" + g.nowPrice + "</span> <span\n" +
+                "                                style=\"color: lightgray;font-size: 0.6rem;text-decoration:  line-through;\">¥" + g.oldPrice + "</span>\n" +
+                "                        </div>\n" +
+                "\n" +
+                "                        <div style=\"position: absolute;right: 0;bottom:0;display: flex;align-items: center\">\n" +
+                "                            <div id='carCutCount-" + gid + "'\n" +
+                "                                 style=\"font-size: 1rem;display: flex;justify-content:center;align-items: center;color: orange;border:solid orange 1px;background:white;font-weight: bold;width: 1.3rem;height: 1.3rem;border-radius: 100%;user-select: none\">\n" +
+                "                                —\n" +
+                "                            </div>\n" +
+                "                            <div id='carGoodsCount-" + gid + "' style=\"font-weight: bold;font-size: 1rem;width: 1rem;text-align: center\">" + count + "</div>\n" +
+                "                            <div id='carAddCount-" + gid + "'\n" +
+                "                                 style=\"font-size: 1rem;display: flex;justify-content:center;align-items: center;color: white;background:orange;border:solid orange 1px;font-weight: bold;width: 1.3rem;height: 1.3rem;border-radius: 100%;user-select: none\">\n" +
+                "                                +\n" +
+                "                            </div>\n" +
+                "                        </div>\n" +
+                "\n" +
+                "                    </div>\n" +
+                "\n" +
+                "                </div>")
+            shopCarContent.append(goodsDiv);
+
+            $("#checkItem-" + gid)[0].goods = g;// 把商品对象赋值给复选框的属性
+
+            $("#carAddCount-" + gid).click(function () {
+                let gid = this.id.split('-')[1];
+                let carGoodsCount = $("#carGoodsCount-" + gid);
+                let count = parseInt(carGoodsCount.text().trim());
+                let finalCount = count + 1;
+                $("[id=goodsCount-" + gid + "]").text(finalCount);
+
+                carGoodsCount.text(finalCount);
+                $("#checkItem-" + gid)[0].checked = true;
+                form.render();
+                getSumMoney();// 算账
+                updateCarCount(gid, finalCount);
+
+            });
+            $("#carCutCount-" + gid).click(function () {
+                let gid = this.id.split('-')[1];
+                let carGoodsCount = $("#carGoodsCount-" + gid);
+                let count = parseInt(carGoodsCount.text().trim());
+                if (count > 1) {
+                    $("[id=goodsCount-" + gid + "]").text(count - 1);
+                    carGoodsCount.text(count - 1);
+                } else {
+                    $("[id=goodsCount-" + gid + "]").text(0);
+                    goodsDiv.remove();
+                }
+                form.render();
+                getSumMoney();// 算账
+                updateCarCount(gid, count - 1);
+            })
+            form.on('checkbox(checkItem)', function (data) {
+                getSumMoney();// 算账
+            });
+        }
+        let goodsCountObj = $("[id=goodsCount-" + gid + "]");
+        let count = parseInt(goodsCountObj.text().trim());
+        goodsCountObj.text(count + 1);
+        let carGoodsCountObj = $("[id=carGoodsCount-" + gid + "]");
+        carGoodsCountObj.text(count + 1);// 设置完数字之后
+        $("#checkItem-" + gid)[0].checked = true;
+        form.render();
+        getSumMoney();// 算账
+        updateCarCount(gid, count + 1);
+    }
+
+    /**
+     * 获取购物车的订单信息集合
+     * @returns {[]}
+     */
+    function getOrderInfos() {
+        let orderInfos = [];
+        $("[name=checkItem]").each(function () {
+            if (this.checked) {
+                let orderInfo = this.goods;
+                let nowCount = $("#carGoodsCount-" + orderInfo.goodsId).text().trim();
+                orderInfo.count = nowCount;
+                orderInfo.originalGoodsId = orderInfo.goodsId;
+                orderInfos.push(orderInfo);
+            }
+        });
+        return orderInfos;
+    }
+
+    let allTypes = [[${m.goodsTypeList}]];// 先拿到所有商品类型和商品
+    console.log(allTypes);
+
+    function isAuth() {
+        return [[${session.userId}]] != null && [[${session.userId}]] != undefined
+    }
+
+    $(function () {
+        let merchantInfoDivH = $('#merchantInfoDiv').height();
+        $('#goodsInfoDiv').scroll(function () {
+            var scroH = $(this).scrollTop();  //滚动高度
+            console.log(scroH)
+            if (scroH > merchantInfoDivH - 1) {  // 滚动130后，马上给type和商品换上可以滚动
+                $("#shade").css({
+                    display: 'none'
+                })
+            }
+            if (scroH < 1) {  // 滚动130后，马上给type和商品换上可以滚动
+                $("#shade").css({
+                    display: ''
+                })
+            }
+        });
+        let firstTypeId = $("[id^=typeId-]:eq(0)")[0].id.split('-')[1];
+        var typeId = localStorage.getItem("typeId") == null ? firstTypeId : localStorage.getItem("typeId");
+        layui.use(['layer', 'form',], function () {
+            var layer = layui.layer;
+            var form = layui.form;
+            $("#showCar").click(function () {
+                lhLayer($("#shopCarLayer"))
+            });
+
+            $("[id^=typeId-]").click(function () {
+                $(this).siblings().css({
+                    background: 'rgb(240,240,240)',
+                    'font-weight': ''
+                });
+                $(this).css({
+                    background: 'white',
+                    'font-weight': 'bold'
+                });
+                typeId = this.id.split('-')[1];// 取typeId
+
+                localStorage.setItem("typeId", typeId);
+
+                let type = allTypes.find(e => e.goodsTypeId == typeId);// js种的find函数
+                // allTypes.findIndex() // 找下标
+                // allTypes.map()
+                // allTypes.filter()
+                // allTypes.reduce()
+
+                console.log(type)
+                let goodsList = type.goodsVOS;// 取出商品集合
+                let goodsDiv = $("#goodDiv");
+                goodsDiv.empty();
+                if (goodsList != null) {
+                    for (let x = 0; x < goodsList.length; x++) {
+                        let g = goodsList[x];
+                        let gid = g.goodsId;
+                        let item = $("<div style=\"display: flex;padding: 2px 5px;border-bottom: solid 0.5px rgb(240,240,240);\">\n" +
+                            "                                <div style=\"margin: 10px 5px\">\n" +
+                            "                                    <img  src='" + g.pic + "' style=\"width: 60px\"/>\n" +
+                            "                                </div>\n" +
+                            "                                <div id=\"goodsItemDiv\" style=\"flex: 1;position: relative \">\n" +
+                            "                                    <h3 style=\"font-weight: bold;margin-left: 5px\">" + g.title + "</h3>\n" +
+                            "                                    <div style=\"font-size: 0.65rem;color: gray\">\n" +
+                            "                                        <span>" + g.sold + "</span>\n" +
+                            "                                        <span style=\"margin-left: 10px\">好评99%</span>\n" +
+                            "                                    </div>\n" +
+                            "                                    <div style=\"font-size: 0.9rem;font-weight: bold;color: orangered\">¥<span\n" +
+                            "                                            id='carGoodsPrice-" + gid + "'>" + g.nowPrice + "</span>\n" +
+                            "                                    </div>\n" +
+                            "                                    <div style=\"color: lightgray;font-size: 0.6rem;text-decoration:  line-through;\">¥" + g.oldPrice + "</div>\n" +
+                            "                                    <div style=\"position: absolute;right: 0;bottom:0;display: flex;align-items: center\">\n" +
+                            "                                        <div id='cutCount-" + gid + "'\n" +
+                            "                                             style=\"font-size: 1rem;display: flex;justify-content:center;align-items: center;color: orange;border:solid orange 1px;background:white;font-weight: bold;width: 1.3rem;height: 1.3rem;border-radius: 100%;cursor: pointer;user-select: none\">\n" +
+                            "                                            —\n" +
+                            "                                        </div>\n" +
+                            "                                        <div style=\"font-weight: bold;font-size: 1rem;width: 1rem;text-align: center\" id='goodsCount-" + gid + "'>0</div>\n" +
+                            "                                        <div id='addCount-" + gid + "'\n" +
+                            "                                             style=\"font-size: 1rem;display: flex;justify-content:center;align-items: center;color: white;background:orange;border:solid orange 1px;font-weight: bold;width: 1.3rem;height: 1.3rem;border-radius: 100%;cursor: pointer;user-select: none\">\n" +
+                            "                                            +\n" +
+                            "                                        </div>\n" +
+                            "                                    </div>\n" +
+                            "                                </div>\n" +
+                            "\n" +
+                            "                            </div>");
+                        goodsDiv.append(item);
+
+                        $("#addCount-" + gid)[0].goods = g;
+
+                        $("#cutCount-" + gid)[0].goods = g;
+                    }
+                    $("[id^=addCount-]").click(function () {// 增加购物车
+                        appendCar(this, form);
+                    });
+                    $("[id^=cutCount-]").click(function () {
+                        let domObj = this;
+                        let gid = this.id.split('-')[1];
+                        let goodsCountObj = $("#goodsCount-" + gid);
+                        let count = parseInt(goodsCountObj.text().trim());
+                        if (count > 0) {
+                            goodsCountObj.text(count - 1);
+                            if (count > 1) {
+                                $("#carGoodsCount-" + gid).text(count - 1);
+                            } else {
+                                $("#goodsDiv-" + gid).remove()
+                            }
+                            form.render();
+                            getSumMoney();// 算账
+                            updateCarCount(gid, count - 1);
+                        }
+                    })// 减少购物车
+                } else {
+                    goodsDiv.append($("<div style='color: gray;text-align: center;padding: 20px'>此类型商品已被抢光</div>"))
+                }
+            });
+            $("[id^=typeId-" + typeId + "]").click();
+            form.on('checkbox(checkAll)', function (data) {
+                let checked = data.elem.checked;
+                $("[name=checkItem]").each(function () {
+                    this.checked = checked;
+                });
+                form.render();
+                getSumMoney();// 算账
+            });
+            $("#clearShopCar").click(function () {
+                layer.confirm('您确定清空购物车吗？', {icon: 3, title: ' ',}, function (index) {
+                    $("#shopCarContent").empty();
+                    getSumMoney();
+                    layer.close(index);
+                    $("#showCar").click();
+                });
+            });
+            $("#settlementDiv").click(function () {
+                let allCost = getSumMoney();
+                if (allCost <= 0) {
+                    layer.msg('您先选点商品吧')
+                } else {
+                    $("#allCost").val(allCost);
+                    let infoStr = JSON.stringify(getOrderInfos());
+
+                    let userId = [[${session.userId}]];
+                    if (userId == null || userId == undefined) {// 没有登录
+                        // localStorage.setItem("orderInfos", infoStr);// 购物车也存到本地浏览器,如果要求高一点
+                        localStorage.setItem("redirectUrl", '/pages/front/merchant/merchantShop/' + [[${m.merchantId}]]);// 购物车也存到本地浏览器
+                        window.location = '/loginPage';
+                    } else {
+                        // 应该传递一个orderInfo集合到后台
+                        let orderInfos = getOrderInfos();
+                        $("#infos").val(infoStr);
+                        console.log(orderInfos);
+                        $("#infosForm").submit()
+
+                    }
+                }
+            });
+            getSumMoney();
+        });
+
+    })
+
+</script>
+
+
+</body>
+
+</html>

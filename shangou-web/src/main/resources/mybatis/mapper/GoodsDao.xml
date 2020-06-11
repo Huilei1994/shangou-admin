@@ -322,6 +322,9 @@
       is_coupon = #{isCoupon,jdbcType=BOOLEAN}
     where goods_id = #{goodsId,jdbcType=BIGINT}
   </update>
+
+
+
     <select id="ajaxList" resultType="com.hl.shangou.pojo.vo.GoodsVO">
         select
         <include refid="Base_Column_List"/>
@@ -333,7 +336,7 @@
             <if test="goodsTypeId != null">
                 and goods_type_id = #{goodsTypeId,jdbcType=BIGINT}
             </if>
-            <if test="title != null">
+            <if test="title != null and title != '' ">
                 and title like CONCAT('%', #{title},'%')
             </if>
             <if test="minPrice != null">
@@ -362,7 +365,7 @@
             <if test="goodsTypeId != null">
                 and goods_type_id = #{goodsTypeId,jdbcType=BIGINT}
             </if>
-            <if test="title != null">
+            <if test="title != null and title != '' ">
                 and title like CONCAT('%', #{title},'%')
             </if>
             <if test="minPrice != null">
@@ -378,6 +381,92 @@
                 and is_coupon = #{isCoupon,jdbcType=BOOLEAN}
             </if>
         </where>
+    </select>
+
+
+    <select id="ajaxMerchantList" resultType="com.hl.shangou.pojo.vo.GoodsVO">
+        select
+        <include refid="Base_Column_List"/>
+        from goods
+        <where>
+            <if test="merchantId != null">
+                and merchant_id = #{merchantId,jdbcType=BIGINT}
+            </if>
+            <if test="goodsTypeId != null">
+                and goods_type_id = #{goodsTypeId,jdbcType=BIGINT}
+            </if>
+            <if test="title != null and title != ''">
+                and title like CONCAT('%', #{title},'%')
+            </if>
+            <if test="minPrice != null">
+                and now_price &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                and now_price &lt;= #{maxPrice}
+            </if>
+            <if test="onSale != null">
+                and on_sale = #{onSale,jdbcType=BOOLEAN}
+            </if>
+            <if test="isCoupon != null">
+                and is_coupon = #{isCoupon,jdbcType=BOOLEAN}
+            </if>
+        </where>
+        limit #{start},#{limit}
+    </select>
+
+    <select id="ajaxMerchantCount" resultType="java.lang.Integer">
+        select
+        COUNT(*)
+        from goods
+        <where>
+            <if test="merchantId != null">
+                and merchant_id = #{merchantId,jdbcType=BIGINT}
+            </if>
+            <if test="goodsTypeId != null">
+                and goods_type_id = #{goodsTypeId,jdbcType=BIGINT}
+            </if>
+            <if test="title != null and title != '' ">
+                and title like CONCAT('%', #{title},'%')
+            </if>
+            <if test="minPrice != null">
+                and now_price &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                and now_price &lt;= #{maxPrice}
+            </if>
+            <if test="onSale != null">
+                and on_sale = #{onSale,jdbcType=BOOLEAN}
+            </if>
+            <if test="isCoupon != null">
+                and is_coupon = #{isCoupon,jdbcType=BOOLEAN}
+            </if>
+        </where>
+
+    </select>
+
+
+
+    <select id="getMerchantBestGoods" resultType="com.hl.shangou.pojo.vo.GoodsVO">
+        select
+        a.merchant_id,a.goods_id,a.now_price,a.old_price,a.title,a.sub_title,a.pic,a.takeaway,a.sort,a.province,a.sold,a.create_time,a.praise
+        from goods a
+        where
+        a.on_sale=1
+        and a.merchant_id in
+        <foreach collection="ids" open="(" close=")" item="m" separator=",">
+            #{m.merchantId}
+        </foreach>
+        AND a.sold=(select max(sold) from goods where merchant_id=a.merchant_id)
+
+    </select>
+    <select id="selectGoodsByTypes" resultType="com.hl.shangou.pojo.vo.GoodsVO">
+        select
+        <include refid="Base_Column_List"/>
+        from goods where goods_type_id in
+        <foreach collection="ids" separator="," item="t" close=")" open="(">
+            #{t.goodsTypeId}
+        </foreach>
+
     </select>
 
 </mapper>

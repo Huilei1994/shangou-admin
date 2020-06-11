@@ -885,6 +885,125 @@
         and business_type like CONCAT('%',#{businessType},'%')
       </if>
     </where>
+
+  </select>
+
+
+    <select id="nearbyMerchantByLngLat" resultType="com.hl.shangou.pojo.entity.Merchant">
+    select <include refid="Base_Column_List"/>
+    from
+    merchant
+    <where>
+      <if test="lat != null">
+        and lat between  lat-#{rangeLat} and lat+#{start}
+      </if>
+      <if test="lng != null">
+        and lat between  lng-#{rangeLng} and lng.+#{rangeLng}
+      </if>
+    </where>
+    limit #{start},#{limit}
+    </select>
+
+
+  <select id="ajaxListMerchantVO" resultType="com.hl.shangou.pojo.vo.MerchantVO">
+    select
+    <include refid="Base_Column_List"/>
+    from merchant
+    <where>
+      <if test="merchantId != null">
+        and merchant_id = #{merchantId}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+      <if test="isOpen != null ">
+        and is_open=#{isOpen}
+      </if>
+      <if test="isPlatSend != null ">
+        and is_plat_send=#{isPlatSend}
+      </if>
+      <if test="shopName != null and shopName!=''">
+        and shop_name like CONCAT('%', #{shopName},'%')
+      </if>
+      <if test="phone != null and phone!=''">
+        and phone like CONCAT('%', #{phone},'%')
+      </if>
+      <if test="contactName != null and contactName!=''">
+        and contact_name like CONCAT('%', #{contactName},'%')
+      </if>
+      <if test="address != null and address!=''">
+        and address like CONCAT('%', #{address},'%')
+      </if>
+      <if test="approvalStatus != null and approvalStatus!=''">
+        and approval_status=#{approvalStatus}
+      </if>
+      <if test="maxLng != null ">
+        and lng &lt;=#{maxLng}
+      </if>
+      <if test="minLng != null ">
+        and lng &gt;=#{minLng}
+      </if>
+      <if test="maxLat != null ">
+        and lat &lt;=#{maxLat}
+      </if>
+      <if test="minLat != null ">
+        and lat &gt;=#{minLat}
+      </if>
+    </where>
+    order by create_time DESC
+    limit #{start},#{limit}
+  </select>
+  <select id="ajaxListCount" resultType="java.lang.Integer">
+    select
+    COUNT(*)
+    from merchant
+    <where>
+      <if test="merchantId != null">
+        and merchant_id = #{merchantId}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+      <if test="isOpen != null ">
+        and is_open=#{isOpen}
+      </if>
+      <if test="isPlatSend != null ">
+        and is_plat_send=#{isPlatSend}
+      </if>
+      <if test="shopName != null and shopName!=''">
+        and shop_name like CONCAT('%', #{shopName},'%')
+      </if>
+      <if test="phone != null and phone!=''">
+        and phone like CONCAT('%', #{phone},'%')
+      </if>
+      <if test="contactName != null and contactName!=''">
+        and contact_name like CONCAT('%', #{contactName},'%')
+      </if>
+      <if test="address != null and address!=''">
+        and address like CONCAT('%', #{address},'%')
+      </if>
+      <if test="approvalStatus != null and approvalStatus!=''">
+        and approval_status=#{approvalStatus}
+      </if>
+      <if test="maxLng != null ">
+        and lng &lt;=#{maxLng}
+      </if>
+      <if test="minLng != null ">
+        and lng &gt;=#{minLng}
+      </if>
+      <if test="maxLat != null ">
+        and lat &lt;=#{maxLat}
+      </if>
+      <if test="minLat != null ">
+        and lat &gt;=#{minLat}
+      </if>
+    </where>
+  </select>
+  <select id="selectByPK" resultType="com.hl.shangou.pojo.vo.MerchantVO">
+    select
+    <include refid="Base_Column_List" />
+    from merchant
+    where merchant_id = #{merchantId,jdbcType=BIGINT}
   </select>
 
 

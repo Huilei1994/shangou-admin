@@ -5,7 +5,7 @@ import com.hl.shangou.pojo.entity.ImgCache;
 import com.hl.shangou.service.ImgCacheService;
 import com.hl.shangou.util.Common.StringUtil;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.StringUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
@@ -73,31 +73,31 @@ public class ImgCacheServiceImpl implements ImgCacheService {
      */
     @Override
     public boolean deleteImgCache(Object object)  {
-        Class cls = object.getClass();
-        //获得声明的属性
-        Field[] declaredFields = cls.getDeclaredFields();
 
-        for (Field field : declaredFields) {
-            //类型是string
-            if (field.getType().isAssignableFrom(String.class)) {
-                field.setAccessible(true); //解封
-                String value = null;
-
-                try {
-                    value=(String)field.get(object);//获取传来的值,并转换为字符串
-
-                    if (!StringUtils.isEmpty(value)) {
-                        if (value.startsWith("/upload/")) {
-                            imgCacheDao.deleteByPrimaryKey(value); //删除图片缓存信息
+        Class cls = object.getClass();// 获取反射类对象
+        Field[] declaredFields = cls.getDeclaredFields();// 拿到本类 的所有成员
+        for (Field f : declaredFields) {
+            if (f.getType().isAssignableFrom(String.class)) {// 如果当前成员是String这个类，那么我就把值取出来
+                f.setAccessible(true);// 暴力解封
+                String value = null;// 可以强制转换不会错
+                if (!StringUtils.isEmpty(value)) {// 不是空，就判断是否是/upload/开头的，如果是，就认为是图片。就去缓存里边删缓存
+                    if (value.contains("<img")) {// 这样判断这个是富文本
+                        List<String> imgStrToList = getImgStrToList(value);// 从文本提取图片地址
+                        for (String s : imgStrToList) {
+                            if (s.startsWith("/upload/")) {// 就是图片
+                                imgCacheDao.deleteByPrimaryKey(s);
+                            }
                         }
                     }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    return false;
+                    if (value.startsWith("/upload/")) {// 就是图片
+                        String[] split = value.split(",");
+                        for (String s : split) {
+                            imgCacheDao.deleteByPrimaryKey(s);
+                        }
+                    }
                 }
             }
         }
-
         return true;
     }
 }

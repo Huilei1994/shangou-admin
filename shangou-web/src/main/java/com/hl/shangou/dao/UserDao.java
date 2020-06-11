@@ -5,6 +5,7 @@ import com.hl.shangou.pojo.query.UserQuery;
 import com.hl.shangou.pojo.vo.UserVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface UserDao {
@@ -20,9 +21,16 @@ public interface UserDao {
 
     int updateByPrimaryKey(User record);
 
+
+
     UserVO selectUserByPhoneAndPassword(UserQuery query);
 
     UserVO selectUserByPhone(String phone);
+
+
+
+
+    List<UserVO> selectUserVOByIds(@Param("ids") Collection<Long> goodsList);
 
     List<User> ajaxUserList(UserQuery userQuery);
 

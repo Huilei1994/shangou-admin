@@ -19,6 +19,15 @@ import java.util.List;
 public interface UserService  extends BaseService{
 
 
+
+    User selectByPrimaryKey(Long userId);
+
+    int updateByPrimaryKeySelective(User record);
+
+    int updateByPrimaryKey(User record);
+
+
+
     /**
      * 用户进行登录的方法
      *

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="bottom_menu" id="bottom_menu"
+     style="position: absolute;bottom: 0;left:0;right:0;display: flex;justify-content: space-between;align-items: center;height: 50px">
+    <style>
+        #bottom_menu img {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+        #bottom_menu > div {
+            padding: 0 15px;
+            cursor: pointer;
+        }
+    </style>
+    <div th:url="@{/}">
+        <div>
+            <img th:src="@{/images/home/home.png}"/>
+        </div>
+        <div>
+            首页
+        </div>
+    </div>
+    <div th:url="@{/pages/back/shopCar/list}">
+        <div style="text-align: center">
+            <img th:src="@{/images/home/shoppingCart_gray.png}"/>
+        </div>
+        <div>
+            购物车
+        </div>
+    </div>
+    <div th:url="@{/pages/back/order/listUserOrders}">
+        <div>
+            <img th:src="@{/images/home/order_gray.png}"/>
+        </div>
+        <div>
+            订单
+        </div>
+    </div>
+    <div th:url="@{/pages/front/user/userInfo}">
+        <div>
+            <img th:src="@{/images/home/my_gray.png}"/>
+        </div>
+        <div>
+            我的
+        </div>
+    </div>
+    <script th:inline="javascript" type="text/javascript">
+        $(function () {
+            $("#bottom_menu>div").click(function () {
+                window.location = $(this).attr("url");
+            })
+        })
+    </script>
+</div>
+
+
+</html>

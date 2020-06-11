@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hl.shangou.dao.SgOrderDao">
+  <resultMap id="BaseResultMap" type="com.hl.shangou.pojo.entity.SgOrder">
+    <id column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="pay_status" jdbcType="VARCHAR" property="payStatus" />
+    <result column="receiver_name" jdbcType="VARCHAR" property="receiverName" />
+    <result column="receiver_phone" jdbcType="CHAR" property="receiverPhone" />
+    <result column="receiver_address" jdbcType="VARCHAR" property="receiverAddress" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+    <result column="pay_type" jdbcType="VARCHAR" property="payType" />
+    <result column="coupon_relief" jdbcType="DECIMAL" property="couponRelief" />
+    <result column="red_bag_relief" jdbcType="DECIMAL" property="redBagRelief" />
+    <result column="goods_relief" jdbcType="DECIMAL" property="goodsRelief" />
+    <result column="plat_relief" jdbcType="DECIMAL" property="platRelief" />
+    <result column="arrival_time" jdbcType="VARCHAR" property="arrivalTime" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="actually_paid" jdbcType="DECIMAL" property="actuallyPaid" />
+    <result column="all_cost" jdbcType="DECIMAL" property="allCost" />
+    <result column="all_relief" jdbcType="DECIMAL" property="allRelief" />
+    <result column="packaging_fee" jdbcType="DECIMAL" property="packagingFee" />
+    <result column="delivery_fee" jdbcType="DECIMAL" property="deliveryFee" />
+    <result column="is_plat_send" jdbcType="BOOLEAN" property="isPlatSend" />
+    <result column="receiver_lng" jdbcType="DOUBLE" property="receiverLng" />
+    <result column="receiver_lat" jdbcType="DOUBLE" property="receiverLat" />
+    <result column="receiver_city_code" jdbcType="VARCHAR" property="receiverCityCode" />
+    <result column="is_coupon" jdbcType="BOOLEAN" property="isCoupon" />
+    <result column="merchant_price" jdbcType="DECIMAL" property="merchantPrice" />
+    <result column="commission" jdbcType="DECIMAL" property="commission" />
+    <result column="commission_type" jdbcType="VARCHAR" property="commissionType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_id, merchant_id, user_id, pay_status, receiver_name, receiver_phone, receiver_address, 
+    tag, create_time, pay_time, pay_type, coupon_relief, red_bag_relief, goods_relief, 
+    plat_relief, arrival_time, note, actually_paid, all_cost, all_relief, packaging_fee, 
+    delivery_fee, is_plat_send, receiver_lng, receiver_lat, receiver_city_code, is_coupon, 
+    merchant_price, commission, commission_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sg_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sg_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="order_id" keyProperty="orderId" parameterType="com.hl.shangou.pojo.entity.SgOrder" useGeneratedKeys="true">
+    insert into sg_order (merchant_id, user_id, pay_status, 
+      receiver_name, receiver_phone, receiver_address, 
+      tag, create_time, pay_time, 
+      pay_type, coupon_relief, red_bag_relief, 
+      goods_relief, plat_relief, arrival_time, 
+      note, actually_paid, all_cost, 
+      all_relief, packaging_fee, delivery_fee, 
+      is_plat_send, receiver_lng, receiver_lat, 
+      receiver_city_code, is_coupon, merchant_price, 
+      commission, commission_type)
+    values (#{merchantId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{payStatus,jdbcType=VARCHAR}, 
+      #{receiverName,jdbcType=VARCHAR}, #{receiverPhone,jdbcType=CHAR}, #{receiverAddress,jdbcType=VARCHAR}, 
+      #{tag,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{payTime,jdbcType=TIMESTAMP}, 
+      #{payType,jdbcType=VARCHAR}, #{couponRelief,jdbcType=DECIMAL}, #{redBagRelief,jdbcType=DECIMAL}, 
+      #{goodsRelief,jdbcType=DECIMAL}, #{platRelief,jdbcType=DECIMAL}, #{arrivalTime,jdbcType=VARCHAR}, 
+      #{note,jdbcType=VARCHAR}, #{actuallyPaid,jdbcType=DECIMAL}, #{allCost,jdbcType=DECIMAL}, 
+      #{allRelief,jdbcType=DECIMAL}, #{packagingFee,jdbcType=DECIMAL}, #{deliveryFee,jdbcType=DECIMAL}, 
+      #{isPlatSend,jdbcType=BOOLEAN}, #{receiverLng,jdbcType=DOUBLE}, #{receiverLat,jdbcType=DOUBLE}, 
+      #{receiverCityCode,jdbcType=VARCHAR}, #{isCoupon,jdbcType=BOOLEAN}, #{merchantPrice,jdbcType=DECIMAL}, 
+      #{commission,jdbcType=DECIMAL}, #{commissionType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="order_id" keyProperty="orderId" parameterType="com.hl.shangou.pojo.entity.SgOrder" useGeneratedKeys="true">
+    insert into sg_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null">
+        merchant_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="payStatus != null">
+        pay_status,
+      </if>
+      <if test="receiverName != null">
+        receiver_name,
+      </if>
+      <if test="receiverPhone != null">
+        receiver_phone,
+      </if>
+      <if test="receiverAddress != null">
+        receiver_address,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="payTime != null">
+        pay_time,
+      </if>
+      <if test="payType != null">
+        pay_type,
+      </if>
+      <if test="couponRelief != null">
+        coupon_relief,
+      </if>
+      <if test="redBagRelief != null">
+        red_bag_relief,
+      </if>
+      <if test="goodsRelief != null">
+        goods_relief,
+      </if>
+      <if test="platRelief != null">
+        plat_relief,
+      </if>
+      <if test="arrivalTime != null">
+        arrival_time,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+      <if test="actuallyPaid != null">
+        actually_paid,
+      </if>
+      <if test="allCost != null">
+        all_cost,
+      </if>
+      <if test="allRelief != null">
+        all_relief,
+      </if>
+      <if test="packagingFee != null">
+        packaging_fee,
+      </if>
+      <if test="deliveryFee != null">
+        delivery_fee,
+      </if>
+      <if test="isPlatSend != null">
+        is_plat_send,
+      </if>
+      <if test="receiverLng != null">
+        receiver_lng,
+      </if>
+      <if test="receiverLat != null">
+        receiver_lat,
+      </if>
+      <if test="receiverCityCode != null">
+        receiver_city_code,
+      </if>
+      <if test="isCoupon != null">
+        is_coupon,
+      </if>
+      <if test="merchantPrice != null">
+        merchant_price,
+      </if>
+      <if test="commission != null">
+        commission,
+      </if>
+      <if test="commissionType != null">
+        commission_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null">
+        #{merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="payStatus != null">
+        #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null">
+        #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverPhone != null">
+        #{receiverPhone,jdbcType=CHAR},
+      </if>
+      <if test="receiverAddress != null">
+        #{receiverAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null">
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payType != null">
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="couponRelief != null">
+        #{couponRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="redBagRelief != null">
+        #{redBagRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsRelief != null">
+        #{goodsRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="platRelief != null">
+        #{platRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalTime != null">
+        #{arrivalTime,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="actuallyPaid != null">
+        #{actuallyPaid,jdbcType=DECIMAL},
+      </if>
+      <if test="allCost != null">
+        #{allCost,jdbcType=DECIMAL},
+      </if>
+      <if test="allRelief != null">
+        #{allRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="packagingFee != null">
+        #{packagingFee,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryFee != null">
+        #{deliveryFee,jdbcType=DECIMAL},
+      </if>
+      <if test="isPlatSend != null">
+        #{isPlatSend,jdbcType=BOOLEAN},
+      </if>
+      <if test="receiverLng != null">
+        #{receiverLng,jdbcType=DOUBLE},
+      </if>
+      <if test="receiverLat != null">
+        #{receiverLat,jdbcType=DOUBLE},
+      </if>
+      <if test="receiverCityCode != null">
+        #{receiverCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isCoupon != null">
+        #{isCoupon,jdbcType=BOOLEAN},
+      </if>
+      <if test="merchantPrice != null">
+        #{merchantPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="commission != null">
+        #{commission,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionType != null">
+        #{commissionType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hl.shangou.pojo.entity.SgOrder">
+    update sg_order
+    <set>
+      <if test="merchantId != null">
+        merchant_id = #{merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="payStatus != null">
+        pay_status = #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null">
+        receiver_name = #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverPhone != null">
+        receiver_phone = #{receiverPhone,jdbcType=CHAR},
+      </if>
+      <if test="receiverAddress != null">
+        receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null">
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payType != null">
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="couponRelief != null">
+        coupon_relief = #{couponRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="redBagRelief != null">
+        red_bag_relief = #{redBagRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsRelief != null">
+        goods_relief = #{goodsRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="platRelief != null">
+        plat_relief = #{platRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalTime != null">
+        arrival_time = #{arrivalTime,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="actuallyPaid != null">
+        actually_paid = #{actuallyPaid,jdbcType=DECIMAL},
+      </if>
+      <if test="allCost != null">
+        all_cost = #{allCost,jdbcType=DECIMAL},
+      </if>
+      <if test="allRelief != null">
+        all_relief = #{allRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="packagingFee != null">
+        packaging_fee = #{packagingFee,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryFee != null">
+        delivery_fee = #{deliveryFee,jdbcType=DECIMAL},
+      </if>
+      <if test="isPlatSend != null">
+        is_plat_send = #{isPlatSend,jdbcType=BOOLEAN},
+      </if>
+      <if test="receiverLng != null">
+        receiver_lng = #{receiverLng,jdbcType=DOUBLE},
+      </if>
+      <if test="receiverLat != null">
+        receiver_lat = #{receiverLat,jdbcType=DOUBLE},
+      </if>
+      <if test="receiverCityCode != null">
+        receiver_city_code = #{receiverCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isCoupon != null">
+        is_coupon = #{isCoupon,jdbcType=BOOLEAN},
+      </if>
+      <if test="merchantPrice != null">
+        merchant_price = #{merchantPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="commission != null">
+        commission = #{commission,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionType != null">
+        commission_type = #{commissionType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hl.shangou.pojo.entity.SgOrder">
+    update sg_order
+    set merchant_id = #{merchantId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      pay_status = #{payStatus,jdbcType=VARCHAR},
+      receiver_name = #{receiverName,jdbcType=VARCHAR},
+      receiver_phone = #{receiverPhone,jdbcType=CHAR},
+      receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      coupon_relief = #{couponRelief,jdbcType=DECIMAL},
+      red_bag_relief = #{redBagRelief,jdbcType=DECIMAL},
+      goods_relief = #{goodsRelief,jdbcType=DECIMAL},
+      plat_relief = #{platRelief,jdbcType=DECIMAL},
+      arrival_time = #{arrivalTime,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      actually_paid = #{actuallyPaid,jdbcType=DECIMAL},
+      all_cost = #{allCost,jdbcType=DECIMAL},
+      all_relief = #{allRelief,jdbcType=DECIMAL},
+      packaging_fee = #{packagingFee,jdbcType=DECIMAL},
+      delivery_fee = #{deliveryFee,jdbcType=DECIMAL},
+      is_plat_send = #{isPlatSend,jdbcType=BOOLEAN},
+      receiver_lng = #{receiverLng,jdbcType=DOUBLE},
+      receiver_lat = #{receiverLat,jdbcType=DOUBLE},
+      receiver_city_code = #{receiverCityCode,jdbcType=VARCHAR},
+      is_coupon = #{isCoupon,jdbcType=BOOLEAN},
+      merchant_price = #{merchantPrice,jdbcType=DECIMAL},
+      commission = #{commission,jdbcType=DECIMAL},
+      commission_type = #{commissionType,jdbcType=VARCHAR}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+</mapper>
