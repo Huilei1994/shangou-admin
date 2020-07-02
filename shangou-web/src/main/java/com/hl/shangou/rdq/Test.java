@@ -10,4 +10,8 @@ package com.hl.shangou.rdq;
 
 public class Test {
 
+
+    public static void main(String[] args) {
+        System.err.println("这是一个测试的代码");
+    }
 }
