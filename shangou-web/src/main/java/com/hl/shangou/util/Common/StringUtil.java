@@ -11,13 +11,20 @@ import java.util.stream.Collectors;
 public class StringUtil{
 
 
+    /**
+     * SortAndRepeatStr 排序并且去重复
+     * @param Strings
+     * @return
+     */
     public static List<String> SortAndRepeatStr(String[] Strings){
 
         StringBuffer stringBuffer = new StringBuffer();
 
         ArrayList<String> stringArrayList = new ArrayList<>();
         for (String s : Strings) {
+
             stringArrayList.add(s);
+
         }
 
 
